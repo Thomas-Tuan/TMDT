@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/TMDT/static/css/main.baf7e5cc.css",
-    "main.js": "/TMDT/static/js/main.58d109fc.js",
+    "main.js": "/TMDT/static/js/main.8f2a9c0e.js",
     "static/js/323.eba855d2.chunk.js": "/TMDT/static/js/323.eba855d2.chunk.js",
     "static/js/787.91920ba0.chunk.js": "/TMDT/static/js/787.91920ba0.chunk.js",
     "static/media/vase.jpg": "/TMDT/static/media/vase.60b0c7c6393cf84e7d77.jpg",
@@ -20,12 +20,12 @@
     "static/media/decorate.jpg": "/TMDT/static/media/decorate.9b059af1498ebb8fb03d.jpg",
     "index.html": "/TMDT/index.html",
     "main.baf7e5cc.css.map": "/TMDT/static/css/main.baf7e5cc.css.map",
-    "main.58d109fc.js.map": "/TMDT/static/js/main.58d109fc.js.map",
+    "main.8f2a9c0e.js.map": "/TMDT/static/js/main.8f2a9c0e.js.map",
     "323.eba855d2.chunk.js.map": "/TMDT/static/js/323.eba855d2.chunk.js.map",
     "787.91920ba0.chunk.js.map": "/TMDT/static/js/787.91920ba0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.baf7e5cc.css",
-    "static/js/main.58d109fc.js"
+    "static/js/main.8f2a9c0e.js"
   ]
 }
