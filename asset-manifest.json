@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/TMDT/static/css/main.98ec47ca.css",
-    "main.js": "/TMDT/static/js/main.19796223.js",
+    "main.js": "/TMDT/static/js/main.fb96eda8.js",
     "static/js/787.91920ba0.chunk.js": "/TMDT/static/js/787.91920ba0.chunk.js",
     "static/media/vase.jpg": "/TMDT/static/media/vase.60b0c7c6393cf84e7d77.jpg",
     "static/media/banner5.jpg": "/TMDT/static/media/banner5.7b4cf91fad0e8de1d7e4.jpg",
@@ -17,11 +17,11 @@
     "static/media/decorate.jpg": "/TMDT/static/media/decorate.9b059af1498ebb8fb03d.jpg",
     "index.html": "/TMDT/index.html",
     "main.98ec47ca.css.map": "/TMDT/static/css/main.98ec47ca.css.map",
-    "main.19796223.js.map": "/TMDT/static/js/main.19796223.js.map",
+    "main.fb96eda8.js.map": "/TMDT/static/js/main.fb96eda8.js.map",
     "787.91920ba0.chunk.js.map": "/TMDT/static/js/787.91920ba0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.98ec47ca.css",
-    "static/js/main.19796223.js"
+    "static/js/main.fb96eda8.js"
   ]
 }
