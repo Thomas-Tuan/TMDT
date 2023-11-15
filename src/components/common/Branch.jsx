@@ -1,23 +1,24 @@
 import { Grid, Paper } from "@mui/material";
 import React from 'react';
+import { ImagesBg } from "../../asset";
 
 const Branch = () => {
     var branchData = [
         {
             Name: "arcahorn",
-            Image: require("../../asset/images/Branch/arcahorn.jpg")
+            Image: ImagesBg.arcahornBg,
         },
         {
             Name: "ralphlauren",
-            Image: require("../../asset/images/Branch/ralphlauren.jpg")
+            Image: ImagesBg.ralphlaurenBg,
         },
         {
             Name: "rivierelogo",
-            Image: require("../../asset/images/Branch/rivierelogo.jpg")
+            Image: ImagesBg.riviereBg
         },
         {
             Name: "trudonlogo",
-            Image: require("../../asset/images/Branch/trudon.jpg")
+            Image: ImagesBg.trudonBg
         },
     ]
     return (

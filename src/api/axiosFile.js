@@ -1,8 +1,17 @@
 import axios from "axios";
 import queryString from "query-string";
+
+
+const storedToken = sessionStorage.getItem('adminAccount')
+const accountInfo = JSON.parse(storedToken);
+
+
 const axiosFile = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
-    headers: { 'content-type': 'application/json' },
+    headers: {
+        'content-type': 'application/json',
+        ...(accountInfo?.token ? { Authorization: `Bearer ${accountInfo.token}` } : {}),
+    },
     paramsSerializer: params => queryString.stringify(params),
 });
 axiosFile.interceptors.request.use(function (config) {

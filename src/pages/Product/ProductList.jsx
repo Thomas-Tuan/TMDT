@@ -1,64 +1,89 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Container, FormControl, FormControlLabel, FormLabel, Grid, IconButton, InputBase, Radio, RadioGroup, Slider, Stack, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, CardMedia, CircularProgress, Container, FormControl, FormControlLabel, FormLabel, Grid, IconButton, InputBase, InputLabel, MenuItem, Pagination, Radio, RadioGroup, Select, Slider, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { addItem } from "../../Redux/Cart/CartSlice";
 import useBranches from "../../hooks/useBranches";
 import useCategories from "../../hooks/useCategories";
-import useProducts from "../../hooks/useProducts";
-import { addItem } from "../../hooks/useReducer";
+import usePaginationProducts from '../../hooks/usePaginationProduct';
 import { Colors } from "../../styles/theme";
 
 
 const UserProductList = () => {
-    const { products } = useProducts();
+    const [page, setPage] = useState(0);
+    const { productsPagination, isLoading, dataFetched } = usePaginationProducts(page);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const totalPages = Math.ceil(productsPagination.totalCount / 10);
+
     const navigate = useNavigate();
     const { categories } = useCategories();
     const { branches } = useBranches();
-
     const dispatch = useDispatch();
+
     const [query, setQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(0);
     const [selectedBranch, setSelectedBranch] = useState(0);
 
-    const [minPrice, setMinPrice] = useState(10000);
-    const [maxPrice, setMaxPrice] = useState(50000);
-    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [minPrice, setMinPrice] = useState(1000000);
+    const [maxPrice, setMaxPrice] = useState(100000000);
+    const [sortOption, setSortOption] = useState('az');
+
 
     useEffect(() => {
-        const filterProducts = (products, selectedCategory, selectedBranch, query, minPrice, maxPrice) => {
-            let updatedProducts = [...products];
-            if (selectedCategory !== 0) {
-                updatedProducts = updatedProducts.filter((product) => product.categoryId === selectedCategory);
-            }
-            console.log(updatedProducts)
-            if (selectedBranch !== 0) {
-                updatedProducts = updatedProducts.filter((product) => product.branchId === selectedBranch);
-            }
+        if (!isLoading && dataFetched) {
+            const filterProducts = (selectedCategory, selectedBranch, query, minPrice, maxPrice, sortOption) => {
+                let updatedProducts = [...productsPagination.products];
+                if (selectedCategory !== 0) {
+                    updatedProducts = updatedProducts.filter((product) => product.categoryId === selectedCategory);
+                }
 
-            if (query) {
-                updatedProducts = updatedProducts.filter((product) =>
-                    product.name.toLowerCase().includes(query.toLowerCase())
-                );
-            }
+                if (selectedBranch !== 0) {
+                    updatedProducts = updatedProducts.filter((product) => product.branchId === selectedBranch);
+                }
 
-            if (minPrice && maxPrice) {
-                updatedProducts = updatedProducts.filter((product) =>
-                    product.price >= minPrice && product.price <= maxPrice
-                );
-            }
+                if (query) {
+                    updatedProducts = updatedProducts.filter((product) =>
+                        product.name.toLowerCase().includes(query.toLowerCase())
+                    );
+                }
 
-            return updatedProducts;
-        };
+                if (minPrice && maxPrice) {
+                    updatedProducts = updatedProducts.filter((product) =>
+                        product.price >= minPrice && product.price <= maxPrice
+                    );
+                }
 
-        const updatedProducts = filterProducts(products, selectedCategory, selectedBranch, query, minPrice, maxPrice);
-        setFilteredProducts(updatedProducts);
-    }, [selectedCategory, selectedBranch, query, minPrice, maxPrice, products]);
+                switch (sortOption) {
+                    case 'za':
+                        updatedProducts.sort((a, b) => b.name.localeCompare(a.name));
+                        break;
+                    case 'priceAsc':
+                        updatedProducts.sort((a, b) => a.price - b.price);
+                        break;
+                    case 'priceDesc':
+                        updatedProducts.sort((a, b) => b.price - a.price);
+                        break;
+                    default:
+                        updatedProducts.sort((a, b) => a.name.localeCompare(b.name));
+                        break;
+                }
 
+                return updatedProducts;
+            };
+            const updatedProducts = filterProducts(selectedCategory, selectedBranch, query, minPrice, maxPrice, sortOption);
+            setFilteredProducts(updatedProducts);
+        }
+    }, [isLoading, dataFetched, productsPagination, selectedCategory, selectedBranch, query, minPrice, maxPrice, sortOption]);
 
     const handleNavigateToCart = (proDetail) => {
         dispatch(addItem(proDetail));
         navigate('/cart');
+    };
+
+    const handleNavigateToNextPage = (event, selectedPage) => {
+        setPage(selectedPage);
+        navigate(`/product?page=${selectedPage}`);
     };
 
     const handlePriceChange = (event, newValue) => {
@@ -69,18 +94,30 @@ const UserProductList = () => {
     const handleCategoryChange = (event) => {
         setSelectedCategory(parseInt(event.target.value));
     };
-    const handleBranchChange = (id) => {
-        setSelectedBranch(id)
+
+    const handleBranchChange = (event) => {
+        setSelectedBranch(parseInt(event.target.value));
     };
+
     const handleSearchChange = (event) => {
         setQuery(event.target.value);
+    };
+
+    const handleResetFilter = () => {
+        setSelectedCategory(0);
+        setSelectedBranch(0);
+        setQuery('');
+        setMinPrice(minPrice);
+        setMaxPrice(maxPrice);
+        setPage(1);
+        navigate('/product');
     };
 
     return (
         <Container maxWidth='lg' disableGutters>
             <Grid my={2} container  >
                 <Grid item xs={12} md={3} sm={12} >
-                    <Stack>
+                    <Stack sx={{ mb: 2 }}>
                         <FormControl>
                             <FormLabel>Danh mục</FormLabel>
                             <RadioGroup
@@ -92,205 +129,183 @@ const UserProductList = () => {
                                 <FormControlLabel value={0} control={<Radio />} label="Tất cả" />
                                 {
                                     categories.map((item, idx) => (
-                                        <FormControlLabel key={item.title} value={item.id} control={<Radio />} label={item.title} />
+                                        <FormControlLabel key={idx} value={item.id} control={<Radio />} label={item.title} />
                                     ))
                                 }
                             </RadioGroup>
                         </FormControl>
-                        <Box sx={{ width: "80%", my: 2 }}>
+                        <FormControl>
+                            <FormLabel>Thương hiệu</FormLabel>
+                            <RadioGroup
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                name="radio-buttons-group"
+                                value={selectedBranch}
+                                onChange={handleBranchChange}
+                            >
+                                <FormControlLabel value={0} control={<Radio />} label="Tất cả" />
+                                {
+                                    branches.map((item, idx) => (
+                                        <FormControlLabel key={item.name} value={item.id} control={<Radio />} label={item.name} />
+                                    ))
+                                }
+                            </RadioGroup>
+                        </FormControl>
+                        <Box>
                             <FormLabel>Giá tiền</FormLabel>
                             <Slider
                                 value={[minPrice, maxPrice]}
                                 color="warning"
                                 valueLabelDisplay="auto"
-                                step={20000}
+                                step={1000000}
                                 marks
-                                min={10000}
-                                max={50000}
+                                min={productsPagination?.minPrice}
+                                max={productsPagination?.maxPrice}
                                 onChange={handlePriceChange}
                             />
                         </Box>
                         <Button sx={{
-                            width: "80%",
                             borderRadius: '4px',
                             boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                        }} variant="contained" color="primary" >
+                        }} variant="contained" color="primary"
+                            onClick={() => { handleResetFilter() }} >
                             Làm mới
                         </Button>
                     </Stack>
                 </Grid>
-                <Grid item xs={12} md={9} sm={12} spacing={1} container>
-                    <Box
-                        sx={{
-                            display: {
-                                md: 'none',
-                                sm: "block",
-                            },
-                            m: "8px auto",
-                            borderRadius: '4px',
-                            padding: '4px',
-                            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                        }}
-                    >
-                        <InputBase
-                            value={query}
-                            onChange={handleSearchChange}
-                            placeholder="Tìm kiếm..."
-                            sx={{ marginRight: 1, fontWeight: 'bold' }}
-                        />
-                        <IconButton sx={{ color: `${Colors.black}` }} >
-                            <SearchIcon />
-                        </IconButton>
-                    </Box>
-                    <Box sx={{
-                        display: "flex",
-                        width: 1,
-                        alignItems: "center",
-                        justifyContent: "space-between"
-                    }}>
-                        <Box>
-                            <Typography variant="h5" sx={{
-                                textAlign: "center",
-                                mb: 2,
-                            }} >Thương hiệu</Typography>
-                            <Stack direction="row" alignItems="center" justifyContent="flex-start">
-                                {
-                                    branches.map((item, idx) => (
-                                        <Button key={item.name} onClick={() => { handleBranchChange(item.id) }} sx={{
-                                            borderRadius: '4px',
-                                            mr: 1,
-                                            px: 3,
-                                            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                                        }} variant="contained" color="primary" value={selectedBranch} >
-                                            {item.name}
-                                        </Button>
-                                    ))
-                                }
-                            </Stack>
-                        </Box>
+                {isLoading === true ?
+                    <Grid item xs={12} md={9} sm={12} >
                         <Box
                             sx={{
-                                display: {
-                                    md: 'flex',
-                                    xs: "none",
-                                },
-                                alignItems: 'center',
-                                borderRadius: '4px',
-                                padding: '4px',
-                                mr: 2,
-                                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
                             }}
                         >
-                            <InputBase
-                                value={query}
-                                onChange={handleSearchChange}
-                                placeholder="Tìm kiếm..."
-                                sx={{ marginRight: 1, fontWeight: 'bold' }}
-                            />
-                            <IconButton sx={{ color: `${Colors.black}` }} >
-                                <SearchIcon />
-                            </IconButton>
+                            <CircularProgress sx={{
+                                m: 2
+                            }} />
+                            <Typography align='center' variant='h5'>Loading data...</Typography>
                         </Box>
-                    </Box>
-                    {
-                        filteredProducts.length === 0 ?
-                            <>
-                                {products.map((item, idx) => (
-                                    <Grid key={item.name} item xs={6} md={4} lg={3} >
-                                        <Card component={Link} to={`${item.id}`}
-                                            sx={{
-                                                maxWidth: 345,
-                                            }} >
-                                            <CardMedia
-                                                component="img"
-                                                image={item.imgMain}
-                                                alt={item.name}
-                                                height="250"
-                                                sx={{
-                                                    objectFit: "contain",
-                                                    borderRadius: 2,
-                                                    transition: 'transform 0.3s ease',
-                                                    '&:hover': {
-                                                        transform: 'scaleY(1.04)',
-                                                    },
-                                                }}
-                                            />
-                                            <CardContent >
-                                                <Typography textAlign="center" fontWeight="bold" variant="h5">
-                                                    {item.name}
-                                                </Typography>
-                                                <Typography textAlign="center" variant="body1">
-                                                    {item.price}Đ
-                                                </Typography>
-                                            </CardContent>
-                                            <CardActions sx={{
-                                                display: "flex",
-                                                justifyContent: "center"
-                                            }}>
-                                                <Button sx={{
-                                                    width: "80%"
+                    </Grid> :
+                    <Grid item xs={12} md={9} sm={12} >
+                        <Box sx={{ width: 1, mb: 2 }}>
+                            <Box sx={{
+                                display: "flex",
+                                width: 1,
+                                alignItems: "center",
+                                justifyContent: "space-between"
+                            }}>
+                                <Box>
+                                    <FormControl>
+                                        <InputLabel id="sort-select-label">Sắp xếp theo</InputLabel>
+                                        <Select
+                                            labelId="sort-select-label"
+                                            id="sort-select"
+                                            value={sortOption}
+                                            onChange={(event) => setSortOption(event.target.value)}
+                                        >
+                                            <MenuItem value="az">Tên tăng dần</MenuItem>
+                                            <MenuItem value="za">Tên giảm dần</MenuItem>
+                                            <MenuItem value="priceAsc">Giá tăng dần</MenuItem>
+                                            <MenuItem value="priceDesc">Giá giảm dần</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: 'center',
+                                        borderRadius: '4px',
+                                        padding: '4px',
+                                        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+                                    }}
+                                >
+                                    <InputBase
+                                        value={query}
+                                        onChange={handleSearchChange}
+                                        placeholder="Tìm kiếm..."
+                                        sx={{ width: 1, fontWeight: 'bold' }}
+                                    />
+                                    <IconButton sx={{ color: `${Colors.black}` }} >
+                                        <SearchIcon />
+                                    </IconButton>
+                                </Box>
+                            </Box>
+                        </Box>
+                        {
+                            filteredProducts.length === 0 ?
+                                <Typography variant="body1" sx={{ textAlign: 'center', mt: 2 }}>
+                                    Không có sản phẩm nào khớp với bộ lọc.
+                                </Typography>
+                                :
+                                <Grid container spacing={1} sx={{ mt: 2 }}>
+                                    {
+                                        filteredProducts.length !== 0 && filteredProducts.map((item, idx) => {
+                                            return (
+                                                <Grid key={item.name} item xs={6} md={4} lg={3} >
+                                                    <Card component={Link} to={`${item.id}`}
+                                                        sx={{
+                                                            maxWidth: 345,
+                                                        }} >
+                                                        <CardMedia
+                                                            component="img"
+                                                            image={item.imgMain}
+                                                            alt={item.name}
+                                                            height="250"
+                                                            sx={{
+                                                                objectFit: "contain",
+                                                                borderRadius: 2,
+                                                                transition: 'transform 0.3s ease',
+                                                                '&:hover': {
+                                                                    transform: 'scaleY(1.04)',
+                                                                },
+                                                            }}
+                                                        />
+                                                        <CardContent >
+                                                            <Typography textAlign="center" fontWeight="bold" variant="h5">
+                                                                {item.name}
+                                                            </Typography>
+                                                            <Typography textAlign="center" variant="body1">
+                                                                {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}<sup>Đ</sup>
+                                                            </Typography>
+                                                        </CardContent>
+                                                        <CardActions sx={{
+                                                            display: "flex",
+                                                            justifyContent: "center"
+                                                        }}>
+                                                            <Button sx={{
+                                                                width: "80%"
 
-                                                }} onClick={(e) => {
-                                                    e.preventDefault()
-                                                    handleNavigateToCart(item)
-                                                }} variant="contained" >
-                                                    Mua ngay
-                                                </Button>
-                                            </CardActions>
-                                        </Card>
+                                                            }} onClick={(e) => {
+                                                                e.preventDefault()
+                                                                handleNavigateToCart(item)
+                                                            }} variant="contained" >
+                                                                Mua ngay
+                                                            </Button>
+                                                        </CardActions>
+                                                    </Card>
+                                                </Grid>
+                                            )
+                                        })
+                                    }
+                                    <Grid item xs={12}
+                                        sx={{
+                                            mt: 2,
+                                            display: "flex",
+                                            justifyContent: "center",
+                                        }}>
+                                        <Pagination
+                                            color="warning"
+                                            count={totalPages}
+                                            page={page}
+                                            onChange={handleNavigateToNextPage}
+                                        />
                                     </Grid>
-                                ))}
-                            </>
-                            :
-                            <>
-                                {filteredProducts.map((item, idx) => (
-                                    <Grid key={item.name} item xs={6} md={4} lg={3} >
-                                        <Card component={Link} to={`${item.id}`}
-                                            sx={{
-                                                maxWidth: 345,
-                                            }} >
-                                            <CardMedia
-                                                component="img"
-                                                image={item.imgMain}
-                                                alt={item.name}
-                                                height="250"
-                                                sx={{
-                                                    objectFit: "contain",
-                                                    borderRadius: 2,
-                                                    transition: 'transform 0.3s ease',
-                                                    '&:hover': {
-                                                        transform: 'scaleY(1.04)',
-                                                    },
-                                                }}
-                                            />
-                                            <CardContent >
-                                                <Typography textAlign="center" fontWeight="bold" variant="h5">
-                                                    {item.name}
-                                                </Typography>
-                                                <Typography textAlign="center" variant="body1">
-                                                    {item.price}Đ
-                                                </Typography>
-                                            </CardContent>
-                                            <CardActions sx={{
-                                                display: "flex",
-                                                justifyContent: "center"
-                                            }}>
-                                                <Button sx={{
-                                                    width: "80%"
-
-                                                }} onClick={(e) => {
-                                                    e.preventDefault()
-                                                    handleNavigateToCart(item)
-                                                }} variant="contained" >
-                                                    Mua ngay
-                                                </Button>
-                                            </CardActions>
-                                        </Card>
-                                    </Grid>
-                                ))}
-                            </>
-                    }
-                </Grid>
+                                </Grid>
+                        }
+                    </Grid>
+                }
             </Grid >
         </Container >
     )

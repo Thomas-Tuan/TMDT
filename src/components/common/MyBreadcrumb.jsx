@@ -9,6 +9,8 @@ import {
     useLocation
 } from 'react-router-dom';
 import productApi from '../../api/productApi';
+import { Colors } from '../../styles/theme';
+import { ImagesBg } from '../../asset';
 
 
 function LinkRouter(props) {
@@ -48,19 +50,19 @@ function Page() {
     return (
         <Breadcrumbs aria-label="breadcrumb">
             <LinkRouter underline="hover" color="inherit" to="/">
-                Home
+                Trang chủ
             </LinkRouter>
             {pathnames.map((value, index) => {
                 const last = index === pathnames.length - 1;
                 const to = `/${pathnames.slice(0, index + 1).join('/')}`;
                 return last ? (
                     <Typography variant='h6' color="text.primary" key={to}>
-                        {breadcrumbNameMap[to]}
+                        {breadcrumbNameMap[to] ? breadcrumbNameMap[to] : null}
                     </Typography>
                 ) :
                     (
                         <LinkRouter underline="hover" color="inherit" to={to} key={to}>
-                            {breadcrumbNameMap[to]}
+                            {breadcrumbNameMap[to] ? breadcrumbNameMap[to] : null}
                         </LinkRouter>
                     );
             })}
@@ -68,15 +70,87 @@ function Page() {
     );
 }
 
+const bannerData = [
+    {
+        Id: "contact",
+        Title: "Liên hệ",
+        Image: ImagesBg.contactBg
+    },
+    {
+        Id: "about",
+        Title: "Giới thiệu",
+        Image: ImagesBg.aboutBg
+    },
+    {
+        Id: "product",
+        Title: "Sản phẩm ",
+        Image: ImagesBg.productBg
+    },
+
+]
 export default function MyBreadcrumb() {
     const location = useLocation();
-    const isHomePage = location.pathname !== '/';
+    const isHomePage = location.pathname !== '/' && location.pathname !== '/home' && location.pathname !== '/TMDT';
+    const isCartPage = location.pathname !== '/cart';
+    const isLoginPage = location.pathname !== '/login';
+    const isSuccessPage = location.pathname !== '/success';
+    const pathnames = location.pathname.split('/').filter((x) => x);
+    if (pathnames[1] !== undefined) {
+        return (
+            <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column', alignItems: "center" }}>
+                <Routes>
+                    <Route path="*" element={<Page />} />
+                </Routes>
+            </Box>
+        )
+    }
+    const newBanner = bannerData.filter(x => x.Id === pathnames[0])
     return (
-        isHomePage &&
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: "center" }}>
-            <Routes>
-                <Route path="*" element={<Page />} />
-            </Routes>
-        </Box>
+        <>
+            {isHomePage && isCartPage && isLoginPage && isSuccessPage &&
+                <Box sx={{
+                    height: "250px",
+                    position: 'relative',
+                }} >
+                    {
+                        newBanner.length !== 0 && newBanner.map((item, idx) => (
+                            <Box key={idx} sx={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                backgroundPosition: "center",
+                                backgroundSize: "cover",
+                                backgroundRepeat: "no-repeat",
+                                backgroundImage: `url(${item.Image})`,
+                            }} >
+                                <Typography sx={{
+                                    color: Colors.white,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: 1,
+                                    textTransform: "uppercase",
+                                    fontWeight: "bold",
+                                    fontSize: "30px",
+                                    letterSpacing: 2.25,
+                                    zIndex: 1,
+                                }}>
+                                    {item.Title}
+                                </Typography>
+                            </Box>
+                        ))
+                    }
+                </Box>
+            }
+            {isHomePage && isLoginPage && isSuccessPage &&
+                <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column', alignItems: "center" }}>
+                    <Routes>
+                        <Route path="*" element={<Page />} />
+                    </Routes>
+                </Box>
+            }
+        </>
     );
 }

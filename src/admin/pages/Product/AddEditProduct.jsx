@@ -11,6 +11,7 @@ import {
     MenuItem,
     Select,
     TextField,
+    Typography,
     styled
 } from '@mui/material';
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -19,13 +20,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { v4 } from "uuid";
 import * as Yup from 'yup';
-import { images } from '../../../asset';
+import productApi from '../../../api/productApi';
+import { ImagesBg } from '../../../asset';
+import useBranches from '../../../hooks/useBranches';
 import useCategories from '../../../hooks/useCategories';
 import useProducts from '../../../hooks/useProducts';
 import { storage } from '../../../library/firebase';
 import './style.scss';
-import productApi from '../../../api/productApi';
-import useBranches from '../../../hooks/useBranches';
 
 
 
@@ -164,7 +165,7 @@ const AddEditProduct = () => {
                         {value ? (
                             <img value={value} className='productImg' src={value} alt='Existing' />
                         ) : (
-                            <img className='productImg' src={images.defaultBg} alt='Default' />
+                            <img className='productImg' src={ImagesBg.defaultBg} alt='Default' />
                         )}
                     </Grid>
                     <Grid item xs={12}>
@@ -201,7 +202,7 @@ const AddEditProduct = () => {
                     <Container disableGutters maxWidth="lg">
                         <Form>
                             <Grid container spacing={2}>
-                                <Grid item xs={12} md={6} >
+                                <Grid item xs={12} md={6} sm={12}  >
                                     <Grid container spacing={1}>
                                         <Grid item xs={12} md={12}>
                                             <InputLabel >Tên sản phẩm</InputLabel>
@@ -256,9 +257,9 @@ const AddEditProduct = () => {
                                                 onBlur={handleBlur}
                                                 name="Price"
                                             />
-                                            <p style={{ color: 'red' }}>
+                                            <Typography variant='body1' style={{ color: 'red' }}>
                                                 <ErrorMessage name="Price" component="span" />
-                                            </p>
+                                            </Typography>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
                                             <InputLabel >Số lượng</InputLabel>
@@ -269,9 +270,9 @@ const AddEditProduct = () => {
                                                 onChange={handleChange} onBlur={handleBlur}
                                                 name="Quantity"
                                             />
-                                            <p style={{ color: 'red' }}>
+                                            <Typography variant='body1' style={{ color: 'red' }}>
                                                 <ErrorMessage name="Quantity" component="span" />
-                                            </p>
+                                            </Typography>
                                         </Grid>
                                         <Grid item xs={12} md={12}>
                                             <InputLabel >Mô tả</InputLabel>

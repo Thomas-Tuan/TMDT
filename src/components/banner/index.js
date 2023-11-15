@@ -1,5 +1,6 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Colors } from "../../styles/theme";
+import { ImagesBg } from "../../asset";
 
 
 export default function Banner() {
@@ -7,12 +8,12 @@ export default function Banner() {
     {
       Id: "cireTrvdon",
       Title: "CIRE TRVDON",
-      Image: require("../../asset/images/banner1.jpg"),
+      Image: ImagesBg.homeBannerBg,
     },
     {
       Id: "arcahorn",
       Title: "ARCAHORN",
-      Image: require("../../asset/images/banner5.jpg"),
+      Image: ImagesBg.homeBannerBg2,
     },
 
   ]
@@ -21,7 +22,7 @@ export default function Banner() {
     <Grid container >
       {bannerData.map((item, idx) => (
         <Grid key={item.Id} item lg={6} md={6} xs={12} sx={{
-          height: "50vh"
+          height: 350
         }}>
           <Box sx={{
             height: '100%',

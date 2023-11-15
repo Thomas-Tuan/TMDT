@@ -1,62 +1,71 @@
 import { AdsClickOutlined, DeliveryDiningOutlined, PhoneAndroidOutlined } from "@mui/icons-material";
 import CreditCardIcon from '@mui/icons-material/CreditCard';
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Stack, Typography } from "@mui/material";
-import React from 'react';
+import { Box, Button, Card, CardActions, CardContent, CardMedia, CircularProgress, Grid, Stack, Typography } from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { addItem } from "../Redux/Cart/CartSlice";
+import { ImagesBg } from "../asset";
 import Banner from '../components/banner';
 import Branch from "../components/common/Branch";
 import { SliderCarousel } from "../components/common/SliderCarousel";
-import useProducts from "../hooks/useProducts";
+import usePaginationProducts from "../hooks/usePaginationProduct";
 import { Colors } from '../styles/theme';
-import { useDispatch } from "react-redux";
-import { addItem } from "../hooks/useReducer";
 
-const Home = () => {
+const HomePage = () => {
     const productData = [
         {
             Id: "candle",
             Title: "nến thơm",
-            Image: require("../asset/images/Home/decorate.jpg"),
+            Image: ImagesBg.candleBg,
         },
         {
             Id: "vase",
             Title: "bình hoa",
-            Image: require("../asset/images/Home/vase.jpg"),
+            Image: ImagesBg.vaseBg,
         },
         {
             Id: "frame",
             Title: "khung hình ",
-            Image: require("../asset/images/Home/frame.jpg"),
+            Image: ImagesBg.frameBg,
         },
         {
             Id: "crystal",
             Title: "Đồ pha lê",
-            Image: require("../asset/images/Home/crystal.jpg"),
+            Image: ImagesBg.crystalBg,
         },
         {
             Id: "bathroomDecorate",
             Title: "Đồ nhà tắm",
-            Image: require("../asset/images/Home/bathroom.jpg"),
+            Image: ImagesBg.bathroomBg
         },
         {
             Id: "decorate",
             Title: "Đồ trang trí",
-            Image: require("../asset/images/Home/decorate12.jpg"),
+            Image: ImagesBg.decorateBg
         },
         {
             Id: "plate",
             Title: "Khay",
-            Image: require("../asset/images/Home/plate.jpg"),
+            Image: ImagesBg.plateBg
         },
         {
             Id: "lamp",
             Title: "Đèn",
-            Image: require("../asset/images/Home/lamp12.jpg"),
+            Image: ImagesBg.lampBg
         },
     ]
-    const { products } = useProducts();
+
+    const { productsPagination, isLoading, dataFetched } = usePaginationProducts(0);
+    const [productList, setProductList] = useState([]);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (!isLoading && dataFetched) {
+            setProductList(productsPagination.products);
+        }
+    }, [isLoading, dataFetched, productsPagination]);
 
     const handleNavigateToCart = (proDetail) => {
         dispatch(addItem(proDetail));
@@ -66,52 +75,84 @@ const Home = () => {
     return (
         <>
             <Banner />
+            <Box>
+                <Typography my={2} textTransform="uppercase" textAlign="center" variant="h3" >
+                    Bán chạy nhất
+                </Typography>
+                <Typography my={2} textTransform="uppercase" textAlign="center" variant="body1" >
+                    <Link to="/product">
+                        Xem tất cả
+                    </Link>
+                </Typography>
+            </Box>
             <Grid my={2} container spacing={1} >
-                {products.map((item, idx) => (
-                    < Grid key={item.name} item xs={6} md={6} lg={3} >
-                        <Card component={Link} to={`product/${item.id}`}
+                {isLoading &&
+                    <Grid item xs={12} >
+                        <Box
                             sx={{
-                                maxWidth: 345,
-                            }} >
-                            <CardMedia
-                                component="img"
-                                image={item.imgMain}
-                                alt={item.name}
-                                height="250"
-                                sx={{
-                                    objectFit: "contain",
-                                    borderRadius: 2,
-                                    transition: 'transform 0.3s ease',
-                                    '&:hover': {
-                                        transform: 'scaleY(1.04)',
-                                    },
-                                }}
-                            />
-                            <CardContent >
-                                <Typography textAlign="center" fontWeight="bold" variant="h5">
-                                    {item.name}
-                                </Typography>
-                                <Typography textAlign="center" variant="body1">
-                                    {item.price}Đ
-                                </Typography>
-                            </CardContent>
-                            <CardActions sx={{
                                 display: "flex",
-                                justifyContent: "center"
-                            }}>
-                                <Button sx={{
-                                    width: "80%"
-
-                                }} onClick={(e) => {
-                                    e.preventDefault();
-                                    handleNavigateToCart(item)
-                                }} variant="contained" >
-                                    Mua ngay
-                                </Button>
-                            </CardActions>
-                        </Card>
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <CircularProgress sx={{
+                                m: 2
+                            }} />
+                            <Typography align='center' variant='h5'>Loading data...</Typography>
+                        </Box>
                     </Grid>
-                ))}
+                }
+                {
+                    productList.length !== 0 &&
+                    <>
+                        {productList.slice(-4).reverse().map((item, idx) => (
+                            < Grid key={item.name} item xs={6} md={6} lg={3} >
+                                <Card component={Link} to={`product/${item.id}`}
+                                    sx={{
+                                        maxWidth: 345,
+                                    }} >
+                                    <CardMedia
+                                        component="img"
+                                        image={item.imgMain}
+                                        alt={item.name}
+                                        height="250"
+                                        sx={{
+                                            objectFit: "contain",
+                                            borderRadius: 2,
+                                            transition: 'transform 0.3s ease',
+                                            '&:hover': {
+                                                transform: 'scaleY(1.04)',
+                                            },
+                                        }}
+                                    />
+                                    <CardContent >
+                                        <Typography textAlign="center" fontWeight="bold" variant="h5">
+                                            {item.name}
+                                        </Typography>
+                                        <Typography textAlign="center" variant="body1">
+                                            {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}<sup>Đ</sup>
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions sx={{
+                                        display: "flex",
+                                        justifyContent: "center"
+                                    }}>
+                                        <Button sx={{
+                                            width: "80%"
+
+                                        }} onClick={(e) => {
+                                            e.preventDefault();
+                                            handleNavigateToCart(item)
+                                        }} variant="contained" >
+                                            Mua ngay
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </>
+                }
             </Grid >
             <SliderCarousel />
             <Branch />
@@ -284,4 +325,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default HomePage

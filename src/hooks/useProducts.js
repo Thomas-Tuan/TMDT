@@ -41,7 +41,7 @@ const useProducts = () => {
 
     const handleSubmit = async (values) => {
         try {
-            if (parseInt(values.id) === 0) {
+            if (parseInt(values.Id) === 0) {
                 await productApi.add(values);
                 toast.success('Thêm thành công', {
                     position: "top-right",
@@ -99,6 +99,7 @@ const useProducts = () => {
             console.log("Error to fetch API: ", error.message);
         }
     }
+
 
     return {
         products,

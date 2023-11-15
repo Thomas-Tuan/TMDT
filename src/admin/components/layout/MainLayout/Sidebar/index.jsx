@@ -1,3 +1,4 @@
+import { PanoramaHorizontalOutlined } from '@mui/icons-material';
 import AccountTreeRounded from '@mui/icons-material/AccountTreeRounded';
 import CategoryOutlined from '@mui/icons-material/CategoryOutlined';
 import LabelIcon from '@mui/icons-material/Label';
@@ -11,18 +12,17 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { images } from '../../../../../asset';
-import { drawerWidth } from '../../../../../constants';
+import { ImagesBg } from '../../../../../asset';
 import { Colors } from '../../../../../styles/theme';
-import { PanoramaHorizontalOutlined } from '@mui/icons-material';
 
+const drawerWidth = 240;
 
 const itemsMenu = [
     {
         title: "Dashboard",
         icon: <OtherHousesOutlined />,
         state: "dashboard",
-        link: "/admin/"
+        link: "/admin/dashboard"
 
     },
     {
@@ -116,7 +116,7 @@ const Sidebar = (props) => {
             <Toolbar sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Box
                     sx={{
-                        backgroundImage: `url(${images.loginBg})`,
+                        backgroundImage: `url(${ImagesBg.logoBg})`,
                         backgroundSize: 'cover',
                         backgroundRepeat: 'no-repeat',
                         backgroundPosition: 'center',

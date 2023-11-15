@@ -1,11 +1,12 @@
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, IconButton } from "@mui/material";
-import { images } from "../../asset";
+import { ImagesBg } from "../../asset";
 import { useUIContext } from "../../context/ui";
 import { AppbarContainer } from "../../styles/appbar";
 import { Colors } from "../../styles/theme";
 import Actions from "./actions";
+import { Link } from "react-router-dom";
 
 export default function AppbarMobile({ matches }) {
   const { setDrawerOpen, setShowSearchBox } = useUIContext();
@@ -18,8 +19,9 @@ export default function AppbarMobile({ matches }) {
         }} />
       </IconButton>
       <Box
+        component={Link} to='/'
         sx={{
-          backgroundImage: `url(${images.loginBg})`,
+          backgroundImage: `url(${ImagesBg.logoBg})`,
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',

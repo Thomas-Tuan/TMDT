@@ -15,15 +15,9 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 export default function useDeleteForm(props) {
     const [open, setOpen] = useState(false);
-    const { handleDeleteCate, checkCates } = useCategories();
-    const { handleDeleteBranch, checkBranches } = useBranches();
+    const { handleDeleteCate } = useCategories();
+    const { handleDeleteBranch } = useBranches();
     const { handleDeletePro } = useProducts();
-    let cateFilterArr = [];
-    let branchFilterArr = [];
-    if (props.newValue.Id !== 0) {
-        cateFilterArr = checkCates(props.newValue.Id)
-        branchFilterArr = checkBranches(props.newValue.Id)
-    }
     const MyDialog = () => {
         return (
             <Dialog
@@ -46,31 +40,9 @@ export default function useDeleteForm(props) {
                     </>
                     : props.newValue.branchName ?
                         <>
-                            {
-                                branchFilterArr.length !== 0 &&
-                                <>
-                                    <Typography variant='body1' sx={{
-                                        textAlign: "center",
-                                        px: 2,
-                                        my: 1,
-                                    }} >
-                                        Danh sách sản phẩm có chứa liên kết
-                                    </Typography>
-                                    <Stack my={1} direction="row" spacing={1}>
-                                        {branchFilterArr.map((item, idx) => (
-                                            <Chip color="warning" label={item} sx={{
-                                                textAlign: "center",
-                                            }} key={idx}>
-
-                                            </Chip>
-                                        ))}
-                                    </Stack>
-                                </>
-                            }
-                            {branchFilterArr.length === 0 && <DialogTitle mt={1}>{`Xóa ${props.newValue.branchName} khỏi danh sách thương hiệu ?`}</DialogTitle>}
-
+                            <DialogTitle>{`Xóa ${props.newValue.branchName} khỏi danh sách thương hiệu ?`}</DialogTitle>
                             <DialogActions >
-                                <Button disabled={branchFilterArr.length !== 0} variant='contained' onClick={() => {
+                                <Button variant='contained' onClick={() => {
                                     handleDeleteBranch(props.newValue.Id)
                                 }}>Đồng ý
                                 </Button>
@@ -78,32 +50,9 @@ export default function useDeleteForm(props) {
                             </DialogActions>
                         </>
                         : <>
-                            {
-                                cateFilterArr.length !== 0 &&
-                                <>
-                                    <Typography variant='body1' sx={{
-                                        textAlign: "center",
-                                        px: 2,
-                                        my: 1,
-                                    }} >
-                                        Danh sách sản phẩm có chứa liên kết
-                                    </Typography>
-                                    <Stack my={1} direction="row" spacing={1}>
-                                        {cateFilterArr.map((item, idx) => {
-                                            return (
-                                                <Chip color="warning" label={item} sx={{
-                                                    textAlign: "center",
-                                                }} key={idx}>
-
-                                                </Chip>
-                                            )
-                                        })}
-                                    </Stack>
-                                </>
-                            }
-                            {cateFilterArr.length === 0 && <DialogTitle mt={1}>{`Xóa ${props.newValue.Title} khỏi danh sách danh mục ?`}</DialogTitle>}
+                            <DialogTitle>{`Xóa ${props.newValue.Title} khỏi danh sách danh mục ?`}</DialogTitle>
                             <DialogActions >
-                                <Button disabled={cateFilterArr.length !== 0} variant='contained' onClick={() => {
+                                <Button variant='contained' onClick={() => {
                                     handleDeleteCate(props.newValue.Id)
                                 }}>Đồng ý
                                 </Button>

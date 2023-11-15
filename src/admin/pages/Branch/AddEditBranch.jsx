@@ -9,10 +9,14 @@ import {
     TextField,
     Typography
 } from '@mui/material';
-import { Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React from 'react';
 import { Colors } from '../../../styles/theme';
+import * as Yup from 'yup';
 
+const validationSchema = Yup.object().shape({
+    Name: Yup.string().required('Không được bỏ trống'),
+});
 
 const AddEditBranch = (props) => {
     const { onSubmit, open, branchModel, onClose } = props
@@ -66,7 +70,7 @@ const AddEditBranch = (props) => {
                                 },
                             }} onClick={() => { onClose() }} />
                         </Typography>
-                        <Formik initialValues={branchModel} onSubmit={onSubmit}>
+                        <Formik validationSchema={validationSchema} initialValues={branchModel} onSubmit={onSubmit}>
                             {({ values, handleChange, handleBlur, }) => {
                                 return (
                                     <Form>
@@ -81,6 +85,9 @@ const AddEditBranch = (props) => {
                                             as={TextField}
                                             label="Thương hiệu"
                                         />
+                                        <Typography variant='body1' style={{ color: 'red' }}>
+                                            <ErrorMessage name="Name" component="span" />
+                                        </Typography>
                                         <Box height={14} />
                                         <Button color="primary" variant="contained" fullWidth type="submit">
                                             {isEditMode ? 'Cập nhật' : 'Thêm mới'}

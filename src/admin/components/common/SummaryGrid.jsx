@@ -1,5 +1,5 @@
 import React from 'react'
-import { images } from '../../../asset';
+import { ImagesBg } from '../../../asset';
 import { Box, Grid, Stack, Typography, colors } from '@mui/material';
 import Animate from './Animate';
 import MPaper from './MPaper';
@@ -8,17 +8,17 @@ const summaryData = [
     {
         title: "Total Booking",
         value: "714k",
-        image: images.loginBg
+        image: ImagesBg.candleBg
     },
     {
         title: "Sold",
         value: "311k",
-        image: images.loginBg
+        image: ImagesBg.candleBg
     },
     {
         title: "Canceled",
         value: "122k",
-        image: images.loginBg
+        image: ImagesBg.candleBg
     },
 ]
 

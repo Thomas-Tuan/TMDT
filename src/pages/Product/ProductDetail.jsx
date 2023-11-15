@@ -1,13 +1,14 @@
 import { AddCircleOutlined, FavoriteOutlined, RemoveCircleOutline } from '@mui/icons-material';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
-import { Button, Card, CardActions, CardContent, CardMedia, Container, Grid, IconButton, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, CardMedia, Container, Grid, IconButton, Paper, Stack, Typography } from '@mui/material';
 import parse from 'html-react-parser';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { updateQuantity } from '../../Redux/Cart/CartSlice';
 import productApi from '../../api/productApi';
 import useBranches from '../../hooks/useBranches';
-import { updateQuantity } from '../../hooks/useReducer';
 
 
 const UserProductDetail = () => {
@@ -58,16 +59,27 @@ const UserProductDetail = () => {
                     }
                 } catch (error) {
                     console.error('Lỗi không được lấy dữ liệu sản phẩm:', error);
+                    toast.error('Không tìm thấy sản phẩm này !', {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                    navigate('/product');
                 }
             }
             getProductById(id);
         }
-    }, [id, branches, productDetail.branchId]);
+    }, [id, branches, productDetail.branchId, navigate]);
 
 
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" sx={{ mt: 2 }}>
             <Grid spacing={1} container >
                 <Grid item xs={12} md={1.25} >
                     <Stack
@@ -120,6 +132,7 @@ const UserProductDetail = () => {
                 <Grid item xs={12} md={5.75} >
                     <Paper>
                         <CardMedia
+                            height={400}
                             image={mainImage.trim() === "" ? productDetail.imgMain : mainImage}
                             component="img"
                             alt={productDetail.name}
@@ -133,9 +146,20 @@ const UserProductDetail = () => {
                     <Card >
                         <CardContent >
                             <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                <Typography variant="subtitle1">
-                                    {matchBranch.name}
-                                </Typography>
+                                <Stack alignItems="center">
+                                    <Box sx={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        width: 1,
+                                    }}>
+                                        <Typography variant="subtitle1">
+                                            Thương hiệu
+                                        </Typography>
+                                        <Typography variant="h5">
+                                            {matchBranch.name}
+                                        </Typography>
+                                    </Box>
+                                </Stack>
                                 <IconButton>
                                     <FavoriteOutlined fontSize="large" />
                                 </IconButton>
@@ -143,33 +167,30 @@ const UserProductDetail = () => {
                             <Typography variant="h3">
                                 {productDetail.name}
                             </Typography>
-                            <Typography variant="body1" my={2}>
-                                {productDetail.price} Đ
-                            </Typography>
-                            {productDetail.description && (
-                                <Paper >
-                                    {parse(productDetail.description)}
-                                </Paper>
-                            )}
-                        </CardContent>
-                        <CardActions sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center"
-                        }}>
-                            <Stack my={1} width="100%" direction="row" alignItems="center" justifyContent="flex-start">
-                                <IconButton onClick={(e) => {
-                                    handleDecrease()
+                            <Stack mt={1} direction="row" justifyContent="space-between" alignContent="center">
+                                <Box sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    width: "50%",
                                 }}>
-                                    <RemoveCircleOutline />
-                                </IconButton>
-                                <Typography variant="body1">{itemCount}</Typography>
-                                <IconButton onClick={(e) => {
-                                    handleIncrease()
-                                }}>
-                                    <AddCircleOutlined />
-                                </IconButton>
-                                <Typography variant="subtitle1">còn {productDetail.quantity} sản phẩm</Typography>
+                                    <Typography variant="h5">
+                                        {productDetail.price} <sup>Đ</sup>
+                                    </Typography>
+                                </Box>
+                                <Stack my={1} width="100%" direction="row" alignItems="center" justifyContent="flex-start">
+                                    <IconButton onClick={(e) => {
+                                        handleDecrease()
+                                    }}>
+                                        <RemoveCircleOutline />
+                                    </IconButton>
+                                    <Typography variant="body1">{itemCount}</Typography>
+                                    <IconButton onClick={(e) => {
+                                        handleIncrease()
+                                    }}>
+                                        <AddCircleOutlined />
+                                    </IconButton>
+                                    <Typography variant="subtitle1">còn {productDetail.quantity} sản phẩm</Typography>
+                                </Stack>
                             </Stack>
                             <Button sx={{
                                 width: "100%",
@@ -185,8 +206,38 @@ const UserProductDetail = () => {
                                 }} />
                                 Mua ngay
                             </Button>
-                        </CardActions>
+                        </CardContent>
                     </Card>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Paper sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: 1,
+                    }}>
+                        <Typography textAlign="center" variant="subtitle1">
+                            Mô tả sản phẩm
+                        </Typography>
+                        {productDetail.description && (
+                            <Typography variant="subtitle1">
+                                {parse(productDetail.description)}
+                            </Typography>
+                        )}
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Paper sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: 1,
+                    }}>
+                        <Typography textAlign="center" variant="subtitle1">
+                            Đánh giá sản phẩm
+                        </Typography>
+                        <Typography variant="subtitle1">
+                            New
+                        </Typography>
+                    </Paper>
                 </Grid>
             </Grid>
         </Container>

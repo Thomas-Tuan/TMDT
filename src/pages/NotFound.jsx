@@ -1,6 +1,5 @@
 import { ArrowLeftOutlined } from '@mui/icons-material';
 import { Box, Button, Container, SvgIcon, Typography } from '@mui/material';
-import ImgNotFound from '../../asset/images/error-404.png'
 const NotFound = () => (
     <>
         <Box
@@ -28,7 +27,7 @@ const NotFound = () => (
                     >
                         <img
                             alt="Under development"
-                            src={ImgNotFound}
+                            src={require('../asset/images/error-404.png')}
                             style={{
                                 display: 'inline-block',
                                 maxWidth: '100%',

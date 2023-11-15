@@ -9,14 +9,20 @@ import {
     TextField,
     Typography
 } from '@mui/material';
-import { Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React from 'react';
 import { Colors } from '../../../styles/theme';
+import * as Yup from 'yup';
 
+
+const validationSchema = Yup.object().shape({
+    Title: Yup.string().required('Không được bỏ trống'),
+});
 
 const AddEditCategory = (props) => {
     const { onSubmit, open, categoryModel, onClose } = props
     const isEditMode = !!categoryModel.Title;
+
 
     return (
         <Modal
@@ -66,7 +72,7 @@ const AddEditCategory = (props) => {
                                 },
                             }} onClick={() => { onClose() }} />
                         </Typography>
-                        <Formik initialValues={categoryModel} onSubmit={onSubmit}>
+                        <Formik validationSchema={validationSchema} initialValues={categoryModel} onSubmit={onSubmit}>
                             {({ values, handleChange, handleBlur, }) => {
                                 return (
                                     <Form>
@@ -82,6 +88,9 @@ const AddEditCategory = (props) => {
                                             label="Danh mục"
                                         />
                                         <Box height={14} />
+                                        <Typography variant='body1' style={{ color: 'red' }}>
+                                            <ErrorMessage name="Title" component="span" />
+                                        </Typography>
                                         <Button color="primary" variant="contained" fullWidth type="submit">
                                             {isEditMode ? 'Cập nhật' : 'Thêm mới'}
                                         </Button>

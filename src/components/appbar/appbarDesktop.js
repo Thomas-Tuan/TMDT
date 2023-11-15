@@ -2,13 +2,13 @@ import {
   Box, Toolbar
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { images } from "../../asset";
 import Navbar from "../../components/Navbar/Navbar";
 import {
   AppbarContainer,
   MyList
 } from "../../styles/appbar";
 import Actions from "./actions";
+import { ImagesBg } from "../../asset";
 
 export default function AppbarDesktop({ matches }) {
 
@@ -25,7 +25,7 @@ export default function AppbarDesktop({ matches }) {
             maxHeight: "100%",
             maxWidth: "100%",
             mt: "16px",
-            backgroundImage: `url(${images.loginBg})`,
+            backgroundImage: `url(${ImagesBg.logoBg})`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',

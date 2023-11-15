@@ -1,7 +1,7 @@
 import { DeleteOutline } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
-import { Button, CircularProgress, IconButton, TableContainer, TableSortLabel, Toolbar, Typography, colors } from '@mui/material';
+import { Button, CircularProgress, IconButton, Stack, TableContainer, TableSortLabel, Typography, colors } from '@mui/material';
 import Box from '@mui/material/Box';
 import InputBase from '@mui/material/InputBase';
 import Paper from '@mui/material/Paper';
@@ -44,14 +44,16 @@ export default function BranchList() {
     };
 
     return (
-        <Paper>
+        <Paper sx={{
+            overflow: "auto"
+        }}>
             {MyDialog()}
-            <Toolbar sx={{
+            <Stack direction="row" sx={{
                 pt: 2,
                 margin: '16px',
                 alignItems: "center",
                 width: "100%",
-                justifyContent: "space-between"
+                justifyContent: "center"
             }}>
                 <Button variant="contained" color="primary" onClick={openModal}>
                     Thêm thương hiệu
@@ -60,22 +62,23 @@ export default function BranchList() {
                     sx={{
                         display: 'flex',
                         alignItems: 'center',
+                        justifyContent: "center",
                         borderRadius: '4px',
                         padding: '4px',
-                        mr: 2,
+                        mx: 5,
                         boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
                     }}
                 >
                     <InputBase
                         onChange={itemGet.handleSearchBranchChange}
                         placeholder="Tìm kiếm..."
-                        sx={{ marginRight: 1, fontWeight: 'bold' }}
+                        sx={{ fontWeight: 'bold' }}
                     />
-                    <IconButton sx={{ color: colors.common.black }} >
+                    <IconButton sx={{ mr: 3, color: colors.common.black }} >
                         <SearchIcon />
                     </IconButton>
                 </Box>
-            </Toolbar>
+            </Stack>
             <AddEditBranch branchModel={Object.keys(newValue).length === 0 ? initialValues : newValue} onSubmit={handleSubmit} open={isModalOpen} onClose={closeModal} />
             <Box sx={{ maxWidth: 'xs' }} textAlign='center' mt={3}>
                 {isLoading === true ?

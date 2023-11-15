@@ -1,11 +1,11 @@
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LineElement, LinearScale, PointElement, Title, Tooltip } from "chart.js";
-import { RouterProvider } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { router } from './routes';
-import { Provider } from 'react-redux';
-import store from './hooks/store';
+
+import AdminRoutes from './routes/AdminRoutes';
+import CustomerRoutes from './routes/CustomerRoutes';
 ChartJS.register(BarElement, CategoryScale, LinearScale, PointElement, LineElement, Title, Legend, Tooltip)
 
 
@@ -17,12 +17,15 @@ function App() {
     }
   }
   return (
-    <Provider store={store}>
+    <>
       <CssBaseline />
       <GlobalStyles styles={globalStyles} />
-      <RouterProvider router={router} />
+      <Routes>
+        <Route path="/*" element={<CustomerRoutes />} />
+        <Route path="/admin/*" element={<AdminRoutes />} />
+      </Routes>
       <ToastContainer />
-    </Provider>
+    </>
   );
 }
 

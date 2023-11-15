@@ -1,19 +1,10 @@
 import { useEffect, useState } from 'react';
-import categoryApi from '../api/categoryApi';
 import { toast } from 'react-toastify';
-import useProducts from './useProducts';
+import categoryApi from '../api/categoryApi';
 
 const useCategories = () => {
     const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const { products } = useProducts();
-    const checkCates = (Id) => {
-        const getProductList = products.filter((product) => product.categoryId === Id);
-        const productName = getProductList.map((product) => product.name);
-        if (getProductList) {
-            return productName;
-        }
-    };
 
 
     const handleDeleteCate = async (id) => {
@@ -114,7 +105,6 @@ const useCategories = () => {
         }
     }
     return {
-        checkCates,
         categories,
         isLoading,
         setCategories,

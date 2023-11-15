@@ -4,7 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
-import { Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem, Stack, Typography } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
@@ -13,9 +13,12 @@ import InputBase from '@mui/material/InputBase';
 import Toolbar from '@mui/material/Toolbar';
 import { alpha, styled } from '@mui/material/styles';
 import React, { useState } from 'react';
-import { drawerWidth } from '../../../../../constants';
 import { Colors } from '../../../../../styles/theme';
+import useAuth from '../../../../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
+const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
@@ -75,12 +78,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 const MyAppBar = (props) => {
-    const { handleDrawerOpen, open } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+    const getSession = sessionStorage.getItem('adminAccount')
+    const accountInfo = JSON.parse(getSession);
+    const { handleDrawerOpen, open } = props;
+    const { auth, setAuth } = useAuth();
+
+    const navigate = useNavigate();
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -92,21 +100,32 @@ const MyAppBar = (props) => {
     const handleMenuClose = () => {
         setAnchorEl(null);
         handleMobileMenuClose();
+        setAuth({})
+        sessionStorage.removeItem('adminAccount');
+        toast.success("Đăng xuất thành công", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+        navigate('/admin/login')
     };
 
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
-    const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
             anchorOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'left',
             }}
-            id={menuId}
             keepMounted
             transformOrigin={{
                 vertical: 'top',
@@ -115,8 +134,8 @@ const MyAppBar = (props) => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem >Thông tin tài khoản</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Đăng xuất</MenuItem>
         </Menu>
     );
 
@@ -198,7 +217,7 @@ const MyAppBar = (props) => {
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="error">
                                 <MailIcon />
@@ -213,15 +232,20 @@ const MyAppBar = (props) => {
                                 <NotificationsIcon />
                             </Badge>
                         </IconButton>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
+                        <Stack direction="row" justifyContent="center" alignItems="center">
+                            <IconButton
+                                size="large"
+                                edge="end"
+                                aria-label="account of current user"
+                                onClick={handleProfileMenuOpen}
+                                color="inherit"
+                            >
+                                <AccountCircle />
+                            </IconButton>
+                            <Typography>
+                                {auth.name ? auth.name : accountInfo.name}
+                            </Typography>
+                        </Stack>
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                         <IconButton

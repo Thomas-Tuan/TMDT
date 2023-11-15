@@ -2,6 +2,10 @@ import axiosFile from "./axiosFile";
 
 const productApi = {
     getAll(params) {
+        const url = '/Products/GetAll';
+        return axiosFile.get(url, { params });
+    },
+    getListPagination(params) {
         const url = '/Products/GetList';
         return axiosFile.get(url, { params });
     },

@@ -1,19 +1,11 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import branchApi from '../api/branchApi';
-import useProducts from './useProducts';
 
 const useBranches = () => {
     const [branches, setBranches] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const { products } = useProducts();
-    const checkBranches = (Id) => {
-        const getProductList = products.filter((product) => product.branchId === Id);
-        const productName = getProductList.map((product) => product.name);
-        if (getProductList) {
-            return productName;
-        }
-    };
+
 
     const handleDeleteBranch = async (id) => {
         try {
@@ -112,7 +104,6 @@ const useBranches = () => {
     }
     return {
         branches,
-        checkBranches,
         setBranches,
         isLoading,
         handleSubmit,
