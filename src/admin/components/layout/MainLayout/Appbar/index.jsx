@@ -100,6 +100,11 @@ const MyAppBar = (props) => {
     const handleMenuClose = () => {
         setAnchorEl(null);
         handleMobileMenuClose();
+    };
+
+    const handleSignOut = () => {
+        setAnchorEl(null);
+        handleMobileMenuClose();
         setAuth({})
         sessionStorage.removeItem('adminAccount');
         toast.success("Đăng xuất thành công", {
@@ -135,7 +140,7 @@ const MyAppBar = (props) => {
             onClose={handleMenuClose}
         >
             <MenuItem >Thông tin tài khoản</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Đăng xuất</MenuItem>
+            <MenuItem onClick={handleSignOut}>Đăng xuất</MenuItem>
         </Menu>
     );
 

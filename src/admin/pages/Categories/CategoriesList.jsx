@@ -32,6 +32,7 @@ export default function CategoriesList() {
     const itemGet = useTable(categories);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const initialValues = { Id: 0, Title: '' };
+
     const [newValue, setNewValue] = useState({ ...initialValues });
     const { handleClickOpen, MyDialog, } = useDeleteForm({ newValue, setNewValue });
     const openModal = () => {

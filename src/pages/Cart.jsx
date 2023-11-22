@@ -30,7 +30,6 @@ const Cart = () => {
     const getSession = sessionStorage.getItem('userAccount');
     const newAccountObject = JSON.parse(getSession);
 
-
     const handleClear = () => {
         dispatch(clearCart());
     }
@@ -60,7 +59,7 @@ const Cart = () => {
         {
             ...values,
             Status: 0,
-            customerId: newAccountObject.customerId ? newAccountObject.customerId : 0,
+            customerId: newAccountObject ? newAccountObject.customerId : null,
             Total: cartList.cartTotalAmount,
             Date: currentDate.toISOString(),
             Products: cartList.cartItems

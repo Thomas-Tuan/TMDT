@@ -1,4 +1,3 @@
-import { Chip, Stack, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,6 +7,8 @@ import { forwardRef, useState } from 'react';
 import useBranches from './useBranches';
 import useCategories from './useCategories';
 import useProducts from './useProducts';
+import useUsers from './useUsers';
+import useOrders from './useOrder';
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -18,6 +19,9 @@ export default function useDeleteForm(props) {
     const { handleDeleteCate } = useCategories();
     const { handleDeleteBranch } = useBranches();
     const { handleDeletePro } = useProducts();
+
+    const { handleDeleteOrder } = useOrders();
+    const { handleDeleteUser } = useUsers();
     const MyDialog = () => {
         return (
             <Dialog
@@ -49,16 +53,39 @@ export default function useDeleteForm(props) {
                                 <Button variant='contained' onClick={handleClose}>Hủy bỏ</Button>
                             </DialogActions>
                         </>
-                        : <>
-                            <DialogTitle>{`Xóa ${props.newValue.Title} khỏi danh sách danh mục ?`}</DialogTitle>
-                            <DialogActions >
-                                <Button variant='contained' onClick={() => {
-                                    handleDeleteCate(props.newValue.Id)
-                                }}>Đồng ý
-                                </Button>
-                                <Button variant='contained' onClick={handleClose}>Hủy bỏ</Button>
-                            </DialogActions>
-                        </>
+                        : props.newValue.Title ?
+                            <>
+                                <DialogTitle>{`Xóa ${props.newValue.Title} khỏi danh sách danh mục ?`}</DialogTitle>
+                                <DialogActions >
+                                    <Button variant='contained' onClick={() => {
+                                        handleDeleteCate(props.newValue.Id)
+                                    }}>Đồng ý
+                                    </Button>
+                                    <Button variant='contained' onClick={handleClose}>Hủy bỏ</Button>
+                                </DialogActions>
+                            </>
+                            : props.newValue.userName ?
+                                <>
+                                    <DialogTitle>{`Xóa ${props.newValue.userName} khỏi danh sách người dùng ?`}</DialogTitle>
+                                    <DialogActions >
+                                        <Button variant='contained' onClick={() => {
+                                            handleDeleteUser(props.newValue.Id)
+                                        }}>Đồng ý
+                                        </Button>
+                                        <Button variant='contained' onClick={handleClose}>Hủy bỏ</Button>
+                                    </DialogActions>
+                                </>
+                                :
+                                <>
+                                    <DialogTitle>{`Xóa đơn hàng có mã ${props.newValue.Id} khỏi danh sách đơn đặt hàng ?`}</DialogTitle>
+                                    <DialogActions >
+                                        <Button variant='contained' onClick={() => {
+                                            handleDeleteOrder(props.newValue.Id)
+                                        }}>Đồng ý
+                                        </Button>
+                                        <Button variant='contained' onClick={handleClose}>Hủy bỏ</Button>
+                                    </DialogActions>
+                                </>
                 }
             </Dialog >
         );

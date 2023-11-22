@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { updateQuantity } from '../../Redux/Cart/CartSlice';
 import productApi from '../../api/productApi';
 import useBranches from '../../hooks/useBranches';
+import MyBreadcrumb from '../../components/common/MyBreadcrumb';
 
 
 const UserProductDetail = () => {
@@ -79,33 +80,23 @@ const UserProductDetail = () => {
 
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 2 }}>
-            <Grid spacing={1} container >
-                <Grid item xs={12} md={1.25} >
-                    <Stack
-                        direction={{ xs: "row", md: "column" }}
-                        spacing={2}
-                        sx={{
-                            height: 100,
-                            width: 100,
-                        }}
-                    >
-                        <CardMedia
-                            onClick={() => handleChange(productDetail.imgMain)}
-                            component="img"
-                            image={productDetail.imgMain}
-                            alt={productDetail.name}
-                            width="100%"
-                            height="100%"
+        <>
+            <MyBreadcrumb />
+            <Container maxWidth="lg" sx={{ mt: 2 }}>
+                <Grid spacing={1} container >
+                    <Grid item xs={12} md={1.25} >
+                        <Stack
+                            direction={{ xs: "row", md: "column" }}
+                            spacing={2}
                             sx={{
-                                borderRadius: 2,
+                                height: 100,
+                                width: 100,
                             }}
-                        />
-                        {productDetail.image2 &&
+                        >
                             <CardMedia
-                                onClick={() => handleChange(productDetail.image2)}
+                                onClick={() => handleChange(productDetail.imgMain)}
                                 component="img"
-                                image={productDetail.image2}
+                                image={productDetail.imgMain}
                                 alt={productDetail.name}
                                 width="100%"
                                 height="100%"
@@ -113,134 +104,147 @@ const UserProductDetail = () => {
                                     borderRadius: 2,
                                 }}
                             />
-                        }
-                        {productDetail.image3 &&
+                            {productDetail.image2 &&
+                                <CardMedia
+                                    onClick={() => handleChange(productDetail.image2)}
+                                    component="img"
+                                    image={productDetail.image2}
+                                    alt={productDetail.name}
+                                    width="100%"
+                                    height="100%"
+                                    sx={{
+                                        borderRadius: 2,
+                                    }}
+                                />
+                            }
+                            {productDetail.image3 &&
+                                <CardMedia
+                                    onClick={() => handleChange(productDetail.image3)}
+                                    component="img"
+                                    image={productDetail.image3}
+                                    alt={productDetail.name}
+                                    width="100%"
+                                    height="100%"
+                                    sx={{
+                                        borderRadius: 2,
+                                    }}
+                                />
+                            }
+                        </Stack >
+                    </Grid>
+                    <Grid item xs={12} md={5.75} >
+                        <Paper>
                             <CardMedia
-                                onClick={() => handleChange(productDetail.image3)}
+                                height={400}
+                                image={mainImage.trim() === "" ? productDetail.imgMain : mainImage}
                                 component="img"
-                                image={productDetail.image3}
                                 alt={productDetail.name}
-                                width="100%"
-                                height="100%"
                                 sx={{
                                     borderRadius: 2,
                                 }}
                             />
-                        }
-                    </Stack >
-                </Grid>
-                <Grid item xs={12} md={5.75} >
-                    <Paper>
-                        <CardMedia
-                            height={400}
-                            image={mainImage.trim() === "" ? productDetail.imgMain : mainImage}
-                            component="img"
-                            alt={productDetail.name}
-                            sx={{
-                                borderRadius: 2,
-                            }}
-                        />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} md={5} >
-                    <Card >
-                        <CardContent >
-                            <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                <Stack alignItems="center">
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={5} >
+                        <Card >
+                            <CardContent >
+                                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                                    <Stack alignItems="center">
+                                        <Box sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            width: 1,
+                                        }}>
+                                            <Typography variant="subtitle1">
+                                                Thương hiệu
+                                            </Typography>
+                                            <Typography variant="h5">
+                                                {matchBranch.name}
+                                            </Typography>
+                                        </Box>
+                                    </Stack>
+                                    <IconButton>
+                                        <FavoriteOutlined fontSize="large" />
+                                    </IconButton>
+                                </Stack>
+                                <Typography variant="h3">
+                                    {productDetail.name}
+                                </Typography>
+                                <Stack mt={1} direction="row" justifyContent="space-between" alignContent="center">
                                     <Box sx={{
                                         display: "flex",
-                                        flexDirection: "column",
-                                        width: 1,
+                                        alignItems: "center",
+                                        width: "50%",
                                     }}>
-                                        <Typography variant="subtitle1">
-                                            Thương hiệu
-                                        </Typography>
                                         <Typography variant="h5">
-                                            {matchBranch.name}
+                                            {productDetail.price?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
                                         </Typography>
                                     </Box>
+                                    <Stack my={1} width="100%" direction="row" alignItems="center" justifyContent="flex-start">
+                                        <IconButton onClick={(e) => {
+                                            handleDecrease()
+                                        }}>
+                                            <RemoveCircleOutline />
+                                        </IconButton>
+                                        <Typography variant="body1">{itemCount}</Typography>
+                                        <IconButton onClick={(e) => {
+                                            handleIncrease()
+                                        }}>
+                                            <AddCircleOutlined />
+                                        </IconButton>
+                                        <Typography variant="subtitle1">còn {productDetail.quantity} sản phẩm</Typography>
+                                    </Stack>
                                 </Stack>
-                                <IconButton>
-                                    <FavoriteOutlined fontSize="large" />
-                                </IconButton>
-                            </Stack>
-                            <Typography variant="h3">
-                                {productDetail.name}
-                            </Typography>
-                            <Stack mt={1} direction="row" justifyContent="space-between" alignContent="center">
-                                <Box sx={{
-                                    display: "flex",
+                                <Button sx={{
+                                    width: "100%",
                                     alignItems: "center",
-                                    width: "50%",
-                                }}>
-                                    <Typography variant="h5">
-                                        {productDetail.price} <sup>Đ</sup>
-                                    </Typography>
-                                </Box>
-                                <Stack my={1} width="100%" direction="row" alignItems="center" justifyContent="flex-start">
-                                    <IconButton onClick={(e) => {
-                                        handleDecrease()
-                                    }}>
-                                        <RemoveCircleOutline />
-                                    </IconButton>
-                                    <Typography variant="body1">{itemCount}</Typography>
-                                    <IconButton onClick={(e) => {
-                                        handleIncrease()
-                                    }}>
-                                        <AddCircleOutlined />
-                                    </IconButton>
-                                    <Typography variant="subtitle1">còn {productDetail.quantity} sản phẩm</Typography>
-                                </Stack>
-                            </Stack>
-                            <Button sx={{
-                                width: "100%",
-                                alignItems: "center",
-                                display: "flex",
-                            }} variant="contained"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    handleAddToCart(productDetail, itemCount)
-                                }} >
-                                <ShoppingBagOutlinedIcon sx={{
-                                    mr: 1,
-                                }} />
-                                Mua ngay
-                            </Button>
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Paper sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        width: 1,
-                    }}>
-                        <Typography textAlign="center" variant="subtitle1">
-                            Mô tả sản phẩm
-                        </Typography>
-                        {productDetail.description && (
-                            <Typography variant="subtitle1">
-                                {parse(productDetail.description)}
+                                    display: "flex",
+                                }} variant="contained"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleAddToCart(productDetail, itemCount)
+                                    }} >
+                                    <ShoppingBagOutlinedIcon sx={{
+                                        mr: 1,
+                                    }} />
+                                    Mua ngay
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Paper sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: 1,
+                        }}>
+                            <Typography textAlign="center" variant="subtitle1">
+                                Mô tả sản phẩm
                             </Typography>
-                        )}
-                    </Paper>
+                            {productDetail.description && (
+                                <Typography variant="subtitle1">
+                                    {parse(productDetail.description)}
+                                </Typography>
+                            )}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Paper sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: 1,
+                        }}>
+                            <Typography textAlign="center" variant="subtitle1">
+                                Đánh giá sản phẩm
+                            </Typography>
+                            <Typography variant="subtitle1">
+                                New
+                            </Typography>
+                        </Paper>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <Paper sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        width: 1,
-                    }}>
-                        <Typography textAlign="center" variant="subtitle1">
-                            Đánh giá sản phẩm
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            New
-                        </Typography>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </Container>
+            </Container>
+        </>
     )
 }
 

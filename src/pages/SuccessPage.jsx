@@ -6,7 +6,6 @@ import { Link, useLocation } from 'react-router-dom';
 const SuccessPage = () => {
     const location = useLocation();
     const params = location.state;
-    console.log(params)
     return (
         <Container maxWidth="lg" disableGutters>
             <Box

@@ -12,6 +12,7 @@ const initialValues = {
   Name: '',
   Password: '',
   confirmPass: '',
+  Role: 'User'
 };
 
 const validationSchema = Yup.object().shape({

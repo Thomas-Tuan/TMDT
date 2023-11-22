@@ -1,4 +1,4 @@
-import { PanoramaHorizontalOutlined } from '@mui/icons-material';
+import { FilterFrames, PanoramaHorizontalOutlined } from '@mui/icons-material';
 import AccountTreeRounded from '@mui/icons-material/AccountTreeRounded';
 import CategoryOutlined from '@mui/icons-material/CategoryOutlined';
 import LabelIcon from '@mui/icons-material/Label';
@@ -19,35 +19,42 @@ const drawerWidth = 240;
 
 const itemsMenu = [
     {
-        title: "Dashboard",
+        title: "Trang chủ",
         icon: <OtherHousesOutlined />,
         state: "dashboard",
         link: "/admin/dashboard"
 
     },
     {
-        title: "User",
+        title: "Tài khoản",
         icon: <AccountTreeRounded />,
         state: "user",
         link: "/admin/user"
     },
     {
-        title: "Category",
+        title: "Danh mục",
         icon: <CategoryOutlined />,
         state: "category",
         link: "/admin/category"
     },
     {
-        title: "Branch",
+        title: "Thương hiệu",
         icon: <PanoramaHorizontalOutlined />,
         state: "branch",
         link: "/admin/branch"
     },
     {
-        title: "Product",
+        title: "Sản phẩm",
         icon: <LabelIcon />,
         state: "product",
         link: "/admin/product"
+    },
+    {
+        title: "Đơn hàng",
+        icon: <FilterFrames />,
+        state: "dashboard",
+        link: "/admin/order"
+
     },
 ]
 
@@ -69,10 +76,10 @@ const Sidebar = (props) => {
                     }}>
                         <ListItemButton sx={{
                             borderRadius: "10px",
-                            bgcolor: isActive ? Colors.light_gray : "",
+                            bgcolor: isActive ? Colors.warning : "",
                             color: isActive ? Colors.white : "",
                             "&:hover": {
-                                bgcolor: isActive ? Colors.light_gray : "",
+                                bgcolor: isActive ? Colors.warning : "",
                                 color: isActive ? Colors.white : "",
                             }
                         }}>

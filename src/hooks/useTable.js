@@ -8,7 +8,6 @@ const useTable = (props) => {
     const [order, setOrder] = useState("asc");
     const [orderBy, setOrderBy] = useState("name");
     const [searchTerm, setSearchTerm] = useState({ searchFunc: items => { return items } });
-
     const handlePageChange = (event, newPage) => {
         setPage(newPage)
     }
@@ -127,6 +126,47 @@ const useTable = (props) => {
         });
     }
 
+    const handleSearchUserChange = (e) => {
+        setSearchTerm({
+            searchFunc: items => {
+                if (e.target.value === "")
+                    return items;
+                else
+                    return items.filter((item) => item.userName.toLowerCase().includes(e.target.value.toLowerCase()))
+
+            }
+        });
+    }
+
+    const getStatusText = (status) => {
+        switch (status) {
+            case 0:
+                return 'Đang chờ duyệt';
+            case 1:
+                return 'Đã thanh toán';
+            case 2:
+                return 'Đã duyệt';
+            case -1:
+                return 'Đã hủy';
+            default:
+                return 'Không xác định';
+        }
+    };
+
+    const handleSearchOrderChange = (e) => {
+        setSearchTerm({
+            searchFunc: items => {
+                if (e.target.value === "")
+                    return items;
+                else {
+                    return items.filter((item) => {
+                        const statusText = getStatusText(item.status);
+                        return statusText && statusText.toLowerCase().includes(e.target.value.toLowerCase());
+                    });
+                }
+            }
+        });
+    }
 
     return {
         page,
@@ -149,6 +189,9 @@ const useTable = (props) => {
         handleSearchBranchChange,
         handleSearchCateChange,
         handleSearchProductChange,
+        handleSearchUserChange,
+        handleSearchOrderChange,
+        getStatusText,
         TblPagination,
     };
 };

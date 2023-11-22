@@ -123,6 +123,7 @@ const HomePage = () => {
                                             transition: 'transform 0.3s ease',
                                             '&:hover': {
                                                 transform: 'scaleY(1.04)',
+                                                boxShadow: '10px 10px 40px 15px grey;',
                                             },
                                         }}
                                     />
