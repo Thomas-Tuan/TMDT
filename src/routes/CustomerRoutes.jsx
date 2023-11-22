@@ -40,7 +40,7 @@ const CustomerRoutes = () => {
                             <Route path="/product/:id" element={<UserProductDetail />} />
                             <Route path="/login" element={<SigninPage />} />
                             <Route path="/cart" element={<Cart />} />
-                            <Route path="/success" element={<SuccessPage />} />
+                            <Route path="/success/*" element={<SuccessPage />} />
                             <Route path="*" element={<NotFound />} />
                         </Routes>
                     </Container>

@@ -14,6 +14,7 @@ import * as Yup from 'yup';
 import { addItem, clearCart, decreaseCart, getTotal, removeItem } from '../Redux/Cart/CartSlice';
 import orderApi from '../api/orderApi';
 import { Colors } from '../styles/theme';
+import paymentApi from '../api/paymentApi';
 
 const initialValues = {
     cusName: "",
@@ -29,6 +30,28 @@ const Cart = () => {
 
     const getSession = sessionStorage.getItem('userAccount');
     const newAccountObject = JSON.parse(getSession);
+
+    const handlePayment = async (value) => {
+        var currentDate = new Date();
+        const newOrder =
+        {
+            Status: 2,
+            customerId: newAccountObject ? newAccountObject.customerId : null,
+            Total: cartList.cartTotalAmount,
+            Date: currentDate.toISOString(),
+            Products: cartList.cartItems
+        }
+        try {
+            const orderResult = await orderApi.create(newOrder);
+            handleClear();
+            const params = { Amount: value, orderId: orderResult.id }
+            const response = await paymentApi.create(params);
+            window.location.href = response;
+        }
+        catch (err) {
+            console.log(`Lỗi đặt hàng :${err}`)
+        }
+    }
 
     const handleClear = () => {
         dispatch(clearCart());
@@ -77,7 +100,7 @@ const Cart = () => {
                 theme: "colored",
             });
             handleClear();
-            const params = { orderId: orderResult.id, status: 'success' };
+            const params = { orderId: orderResult.id };
 
             navigate('/success', { state: params });
         }
@@ -340,27 +363,30 @@ const Cart = () => {
                             mx: 2,
                             maxWidth: 1,
                         }} >
-                            <Stack direction="row" justifyContent="space-evenly">
+                            <Stack direction="row" justifyContent="space-between">
                                 <Typography variant='body1' fontWeight={400}>
                                     Tổng cộng:
                                 </Typography>
                                 <Typography variant='body1' fontWeight="bolder">
-                                    {isNaN(cartList.cartTotalAmount) ? 'Loading...' : cartList.cartTotalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
+                                    {cartList.cartTotalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
                                 </Typography>
                             </Stack>
+                            <Typography my={1} variant='body1'>
+                                Phương thức thanh toán
+                            </Typography>
                             <Button sx={{
                                 width: 1,
                                 height: 40,
                                 borderRadius: 3,
-                                marginTop: "1rem",
                                 letterSpacing: "1.15px",
                                 border: `0.5px solid ${Colors.shaft}`,
                                 color: `${Colors.dark_gray}`,
                                 background: "none",
                                 outline: "none",
                                 cursor: "pointer",
-                            }} >
-                                Thanh toán ngay
+                            }}
+                                onClick={() => handlePayment(cartList.cartTotalAmount)} >
+                                VNPAY
                             </Button>
                             <Typography component={Link} to="/product" sx={{
                                 m: "0.75rem 0.75rem",
