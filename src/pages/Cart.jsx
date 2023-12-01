@@ -1,5 +1,5 @@
 import { ChevronRight, DeleteOutline } from '@mui/icons-material';
-import { Box, Button, Container, FormControl, FormControlLabel, Grid, IconButton, InputLabel, Paper, Radio, RadioGroup, Stack, TableContainer, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, FormControl, FormControlLabel, Grid, IconButton, Paper, Radio, RadioGroup, Stack, TableContainer, TextField, Typography } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -13,8 +13,8 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { addItem, clearCart, decreaseCart, getTotal, removeItem } from '../Redux/Cart/CartSlice';
 import orderApi from '../api/orderApi';
-import { Colors } from '../styles/theme';
 import paymentApi from '../api/paymentApi';
+import { Colors } from '../styles/theme';
 
 const initialValues = {
     cusName: "",
@@ -31,11 +31,19 @@ const Cart = () => {
     const getSession = sessionStorage.getItem('userAccount');
     const newAccountObject = JSON.parse(getSession);
 
-    const handlePayment = async (value) => {
+    const handlePaymentWithPaypal = async (values) => {
+        if (
+            values.Info.cusName.trim() === "" ||
+            values.Info.Phone.trim() === ""
+        ) {
+            alert("Vui lòng nhập đầy đủ thông tin !!");
+            return;
+        }
         var currentDate = new Date();
         const newOrder =
         {
-            Status: 2,
+            ...values.Info,
+            Status: 0,
             customerId: newAccountObject ? newAccountObject.customerId : null,
             Total: cartList.cartTotalAmount,
             Date: currentDate.toISOString(),
@@ -44,8 +52,39 @@ const Cart = () => {
         try {
             const orderResult = await orderApi.create(newOrder);
             handleClear();
-            const params = { Amount: value, orderId: orderResult.id }
-            const response = await paymentApi.create(params);
+            const params = { Amount: values.Amount, orderId: orderResult.id }
+            const response = await paymentApi.createPaymentWithPaypal(params);
+            window.location.href = response;
+        }
+        catch (err) {
+            console.log(`Lỗi đặt hàng :${err}`)
+        }
+    }
+
+
+    const handlePaymentWithVnPay = async (values) => {
+        if (
+            values.Info.cusName.trim() === "" ||
+            values.Info.Phone.trim() === ""
+        ) {
+            alert("Vui lòng nhập đầy đủ thông tin !!");
+            return;
+        }
+        var currentDate = new Date();
+        const newOrder =
+        {
+            ...values.Info,
+            Status: 0,
+            customerId: newAccountObject ? newAccountObject.customerId : null,
+            Total: cartList.cartTotalAmount,
+            Date: currentDate.toISOString(),
+            Products: cartList.cartItems
+        }
+        try {
+            const orderResult = await orderApi.create(newOrder);
+            handleClear();
+            const params = { Amount: values.Amount, orderId: orderResult.id }
+            const response = await paymentApi.createPaymentWithVnPay(params);
             window.location.href = response;
         }
         catch (err) {
@@ -72,7 +111,8 @@ const Cart = () => {
     const validationSchema = Yup.object().shape({
         cusName: Yup.string().required('Không được bỏ trống'),
         Phone: Yup.string().required('Không được bỏ trống')
-            .matches(/^[0-9]+$/, 'Số điện thoại chỉ được chứa các ký tự số'),
+            .matches(/^[0-9]+$/, 'Số điện thoại chỉ được chứa các ký tự số')
+            .min(10, 'Số điện thoại phải 10 ký tự trở lên'),
         Email: Yup.string(),
         Gender: Yup.number(),
     });
@@ -298,8 +338,8 @@ const Cart = () => {
                                                     </FormControl>
                                                 </Grid>
                                                 <Grid item xs={12} md={6}  >
-                                                    <InputLabel >Tên khách hàng</InputLabel>
                                                     <Field
+                                                        label="Tên khách hàng"
                                                         fullWidth
                                                         value={values.Name}
                                                         onChange={handleChange}
@@ -312,8 +352,8 @@ const Cart = () => {
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={12} md={6}  >
-                                                    <InputLabel >Số điện thoại</InputLabel>
                                                     <Field
+                                                        label="Số điện thoại"
                                                         fullWidth
                                                         value={values.Phone}
                                                         onChange={handleChange}
@@ -326,9 +366,9 @@ const Cart = () => {
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={12} md={12}  >
-                                                    <InputLabel sx={{ letterSpacing: '1px' }} >Email(Không bắt buộc)</InputLabel>
                                                     <Field
                                                         fullWidth
+                                                        label="Email(Không bắt buộc)"
                                                         value={values.Email}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
@@ -340,11 +380,51 @@ const Cart = () => {
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={12} md={12} alignItems="center">
-                                                    <Button color="primary" variant="contained" fullWidth type="submit">
-                                                        Tiến hành đặt hàng
-                                                    </Button>
+                                                    <Stack justifyContent="center" alignItems="center">
+                                                        <Typography my={1} variant='body1'>
+                                                            Phương thức thanh toán
+                                                        </Typography>
+                                                        <Stack width="100%" direction="row" justifyContent="space-between" alignItems="center">
+                                                            <Button sx={{
+                                                                mr: 2,
+                                                                width: 1,
+                                                                height: 40,
+                                                                borderRadius: 3,
+                                                                letterSpacing: "1.15px",
+                                                                border: `0.5px solid ${Colors.shaft}`,
+                                                                color: `${Colors.dark_gray}`,
+                                                                background: "none",
+                                                                outline: "none",
+                                                                cursor: "pointer",
+                                                            }}
+                                                                onClick={() => handlePaymentWithPaypal({ Info: values, Amount: cartList.cartTotalAmount })}
+                                                            >
+                                                                Paypal
+                                                            </Button>
+                                                            <Button sx={{
+                                                                width: 1,
+                                                                height: 40,
+                                                                borderRadius: 3,
+                                                                letterSpacing: "1.15px",
+                                                                border: `0.5px solid ${Colors.shaft}`,
+                                                                color: `${Colors.dark_gray}`,
+                                                                background: "none",
+                                                                outline: "none",
+                                                                cursor: "pointer",
+                                                            }}
+                                                                onClick={() => handlePaymentWithVnPay({ Info: values, Amount: cartList.cartTotalAmount })} >
+                                                                VNPAY
+                                                            </Button>
+                                                        </Stack>
+                                                    </Stack>
                                                 </Grid>
                                             </Grid>
+                                            <Typography my={1} variant='body1' textAlign="center">
+                                                hoặc
+                                            </Typography>
+                                            <Button color="primary" variant="contained" fullWidth type="submit">
+                                                Tiến hành đặt hàng
+                                            </Button>
                                         </Form>
                                     )
                                 }
@@ -371,23 +451,6 @@ const Cart = () => {
                                     {cartList.cartTotalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
                                 </Typography>
                             </Stack>
-                            <Typography my={1} variant='body1'>
-                                Phương thức thanh toán
-                            </Typography>
-                            <Button sx={{
-                                width: 1,
-                                height: 40,
-                                borderRadius: 3,
-                                letterSpacing: "1.15px",
-                                border: `0.5px solid ${Colors.shaft}`,
-                                color: `${Colors.dark_gray}`,
-                                background: "none",
-                                outline: "none",
-                                cursor: "pointer",
-                            }}
-                                onClick={() => handlePayment(cartList.cartTotalAmount)} >
-                                VNPAY
-                            </Button>
                             <Typography component={Link} to="/product" sx={{
                                 m: "0.75rem 0.75rem",
                                 color: `${Colors.shaft}`,

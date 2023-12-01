@@ -4,7 +4,6 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Avatar,
   Button,
-  FormControlLabel,
   Grid,
   IconButton,
   InputAdornment,
@@ -12,14 +11,13 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import loginApi from '../../../api/loginApi';
 import useAuth from '../../../hooks/useAuth';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 const AdminLogin = () => {
   const paperRootStyle = { width: 340, margin: "20px auto" }
@@ -44,7 +42,6 @@ const AdminLogin = () => {
   const initialValues = {
     Name: '',
     Password: '',
-    Remember: false
   }
   const validationSchema = Yup.object().shape({
     Name: Yup.string().required("Không được bỏ trống"),
@@ -132,15 +129,6 @@ const AdminLogin = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Field as={FormControlLabel}
-                name='remember'
-                control={
-                  <Checkbox
-                    color="primary"
-                  />
-                }
-                label="Remember me"
-              />
               <Button type='submit' color='primary' variant="contained"
                 style={btnstyle} fullWidth> Đăng nhập
               </Button>

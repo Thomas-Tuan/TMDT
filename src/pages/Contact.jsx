@@ -1,15 +1,16 @@
-import { Box, Button, Container, Grid, InputLabel, TextField, TextareaAutosize, Typography } from '@mui/material'
+import { Box, Button, Container, Grid, InputLabel, TextField, Typography } from '@mui/material'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React from 'react'
-import { Colors } from '../styles/theme'
+import Iframe from 'react-iframe'
+import * as Yup from 'yup'
 import { ImagesBg } from '../asset'
 import MyBreadcrumb from '../components/common/MyBreadcrumb'
-import { ErrorMessage, Field, Form, Formik } from 'formik'
-import * as Yup from 'yup';
-import Iframe from 'react-iframe'
+import useContacts from '../hooks/useContact'
+import { Colors } from '../styles/theme'
 
 const initialValues = {
     Id: 0,
-    cusName: '',
+    Name: '',
     Email: '',
     Phone: '',
     Title: '',
@@ -17,20 +18,17 @@ const initialValues = {
 };
 
 const Contact = () => {
+    const { handleSubmit } = useContacts();
 
     const validationSchema = Yup.object().shape({
-        cusName: Yup.string().required('Không được bỏ trống'),
+        Name: Yup.string().required('Không được bỏ trống'),
         Title: Yup.string().required('Không được bỏ trống'),
         Description: Yup.string().required('Không được bỏ trống'),
-        Phone: Yup.string().required('Không được bỏ trống')
+        Phone: Yup.string().required('Không được bỏ trống').min(10, 'Số điện thoại phải 10 ký tự trở lên')
             .matches(/^[0-9]+$/, 'Số điện thoại chỉ được chứa các ký tự số'),
         Email: Yup.string().email("Không đúng cú pháp email !").required('Không được bỏ trống'),
 
     });
-
-    const handleSubmit = (values) => {
-        console.log(values)
-    }
 
     return (
         <>
@@ -80,14 +78,14 @@ const Contact = () => {
                                                 <InputLabel >Họ tên</InputLabel>
                                                 <Field
                                                     fullWidth
-                                                    value={values.cusName}
+                                                    value={values.Name}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    name="cusName"
+                                                    name="Name"
                                                     as={TextField}
                                                 />
                                                 <Typography variant='body1' style={{ color: 'red' }}>
-                                                    <ErrorMessage name="cusName" component="span" />
+                                                    <ErrorMessage name="Name" component="span" />
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12} md={6}  >

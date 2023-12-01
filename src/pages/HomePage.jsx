@@ -202,7 +202,8 @@ const HomePage = () => {
                                     textTransform: "uppercase",
                                     marginBottom: "8px",
                                     zIndex: 1,
-                                }}>
+                                }}
+                                    component={Link} to='/product'>
                                     Xem tất cả
                                 </Typography>
                             </Stack>

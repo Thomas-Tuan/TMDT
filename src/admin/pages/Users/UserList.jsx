@@ -10,11 +10,11 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import userApi from '../../../api/userApi';
 import useDeleteForm from '../../../hooks/useDeleteForm';
 import useTable from '../../../hooks/useTable';
-import useUsers from '../../../hooks/useUsers';
 
 const headCells = [
     {
@@ -44,11 +44,30 @@ const headCells = [
 ]
 
 export default function UsersList() {
-    const { user, isLoading } = useUsers();
-    const itemGet = useTable(user);
+    const [user, setUser] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [newValue, setNewValue] = useState({});
+
     const { handleClickOpen, MyDialog, } = useDeleteForm({ newValue, setNewValue });
+    const itemGet = useTable(user);
     const location = useLocation();
+
+
+    useEffect(() => {
+        setIsLoading(true);
+        fetchUserList();
+    }, [])
+
+    const fetchUserList = async () => {
+        try {
+            const response = await userApi.getAllUser();
+            setIsLoading(false);
+            setUser(response);
+        } catch (error) {
+            console.log("Error to fetch API: ", error.message);
+        }
+    }
+
     return (
         <Paper sx={{
             overflow: "auto",
@@ -134,7 +153,7 @@ export default function UsersList() {
                                             {item.email}
                                         </TableCell>
                                         <TableCell component="th" scope="row">
-                                            <Typography key={idx} variant='body1'>
+                                            <Typography variant='body1'>
                                                 {item.role}
                                             </Typography>
                                         </TableCell>

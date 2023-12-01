@@ -10,6 +10,8 @@ import { ScreenMode } from '../../pages/LoginPage';
 const initialValues = {
   Email: '',
   Name: '',
+  Phone: '',
+  cusName: '',
   Password: '',
   confirmPass: '',
   Role: 'User'
@@ -18,6 +20,10 @@ const initialValues = {
 const validationSchema = Yup.object().shape({
   Email: Yup.string().email("Không đúng cú pháp email !").required('Không được bỏ trống'),
   Name: Yup.string().required('Không được bỏ trống'),
+  cusName: Yup.string().required('Không được bỏ trống'),
+  Phone: Yup.string().required('Không được bỏ trống')
+    .matches(/^[0-9]+$/, 'Số điện thoại chỉ được chứa các ký tự số')
+    .min(10, 'Số điện thoại phải 10 ký tự trở lên'),
   Password: Yup.string().required('Không được bỏ trống').min(5, 'Mật khẩu phải 5 ký tự trở lên'),
   confirmPass: Yup.string().oneOf([Yup.ref('Password')], 'Mật khẩu không trùng khớp')
     .required('Không được bỏ trống'),
@@ -108,6 +114,34 @@ const SignUpForm = ({ onSwitchMode }) => {
                       </Field>
                       <Typography variant='body1' style={{ color: 'red' }}>
                         <ErrorMessage name="Name" component="span" />
+                      </Typography>
+                    </Stack>
+                    <Stack spacing={1}>
+                      <InputLabel >Tên khách hàng</InputLabel>
+                      <Field
+                        fullWidth
+                        value={values.cusName}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="cusName"
+                        as={TextField}>
+                      </Field>
+                      <Typography variant='body1' style={{ color: 'red' }}>
+                        <ErrorMessage name="cusName" component="span" />
+                      </Typography>
+                    </Stack>
+                    <Stack spacing={1}>
+                      <InputLabel >Số điện thoại</InputLabel>
+                      <Field
+                        fullWidth
+                        value={values.Phone}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="Phone"
+                        as={TextField}>
+                      </Field>
+                      <Typography variant='body1' style={{ color: 'red' }}>
+                        <ErrorMessage name="Phone" component="span" />
                       </Typography>
                     </Stack>
                     <Stack spacing={1}>

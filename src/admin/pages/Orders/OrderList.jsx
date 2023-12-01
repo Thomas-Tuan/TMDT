@@ -11,10 +11,10 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { format, parseISO } from 'date-fns';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import orderApi from '../../../api/orderApi';
 import useDeleteForm from '../../../hooks/useDeleteForm';
-import useOrders from '../../../hooks/useOrder';
 import useTable from '../../../hooks/useTable';
 
 const headCells = [
@@ -39,13 +39,31 @@ const headCells = [
 ]
 
 export default function OrdersList() {
-    const { orders, isLoading } = useOrders();
+    const [orders, setOrders] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const itemGet = useTable(orders);
     const [newValue, setNewValue] = useState({});
+
     const { handleClickOpen, MyDialog, } = useDeleteForm({ newValue, setNewValue });
 
     const navigate = useNavigate();
     const location = useLocation();
+
+    useEffect(() => {
+        setIsLoading(true);
+        fetchOrderList();
+    }, [])
+
+    const fetchOrderList = async () => {
+        try {
+            const response = await orderApi.getAll();
+            setIsLoading(false);
+            setOrders(response);
+        } catch (error) {
+            console.log("Error to fetch API: ", error.message);
+        }
+    }
+
 
     return (
         <Paper sx={{

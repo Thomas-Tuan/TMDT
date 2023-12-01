@@ -8,13 +8,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateQuantity } from '../../Redux/Cart/CartSlice';
 import productApi from '../../api/productApi';
-import useBranches from '../../hooks/useBranches';
 import MyBreadcrumb from '../../components/common/MyBreadcrumb';
+import branchApi from '../../api/branchApi';
 
 
 const UserProductDetail = () => {
     const { id } = useParams();
-    const { branches } = useBranches();
+    const [branches, setBranches] = useState([]);
     const [productDetail, setProductDetail] = useState({})
     const [matchBranch, setMatchBranch] = useState({})
 
@@ -77,7 +77,18 @@ const UserProductDetail = () => {
         }
     }, [id, branches, productDetail.branchId, navigate]);
 
+    useEffect(() => {
+        fetchBranchList();
+    }, [])
 
+    const fetchBranchList = async () => {
+        try {
+            const response = await branchApi.getAll();
+            setBranches(response);
+        } catch (error) {
+            console.log("Error to fetch API: ", error.message);
+        }
+    }
 
     return (
         <>
@@ -170,6 +181,11 @@ const UserProductDetail = () => {
                                 <Typography variant="h3">
                                     {productDetail.name}
                                 </Typography>
+                                {productDetail.description && (
+                                    <Typography variant="subtitle1">
+                                        {parse(productDetail.description)}
+                                    </Typography>
+                                )}
                                 <Stack mt={1} direction="row" justifyContent="space-between" alignContent="center">
                                     <Box sx={{
                                         display: "flex",
@@ -212,23 +228,7 @@ const UserProductDetail = () => {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Paper sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: 1,
-                        }}>
-                            <Typography textAlign="center" variant="subtitle1">
-                                Mô tả sản phẩm
-                            </Typography>
-                            {productDetail.description && (
-                                <Typography variant="subtitle1">
-                                    {parse(productDetail.description)}
-                                </Typography>
-                            )}
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={12}>
                         <Paper sx={{
                             display: "flex",
                             flexDirection: "column",

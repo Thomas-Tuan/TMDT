@@ -6,7 +6,7 @@ const useTable = (props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
     const [order, setOrder] = useState("asc");
-    const [orderBy, setOrderBy] = useState("name");
+    const [orderBy, setOrderBy] = useState("");
     const [searchTerm, setSearchTerm] = useState({ searchFunc: items => { return items } });
     const handlePageChange = (event, newPage) => {
         setPage(newPage)
@@ -59,7 +59,7 @@ const useTable = (props) => {
                 return 1;
             }
         }
-        else if (orderBy === "branchName") {
+        else if (orderBy === "branchName" || orderBy === "Name") {
             a = a.name.toLowerCase();
             b = b.name.toLowerCase();
             if (b < a) {
@@ -79,7 +79,7 @@ const useTable = (props) => {
     }
 
     const listAfterPagingAndSorting = () => {
-        return stableSort(searchTerm.searchFunc(props.sort()), getComparator(order, orderBy))
+        return stableSort(searchTerm.searchFunc(props), getComparator(order, orderBy))
             .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
     }
 
@@ -89,8 +89,6 @@ const useTable = (props) => {
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(id);
     }
-
-
 
     const handleSearchBranchChange = (e) => {
         setSearchTerm({
@@ -103,6 +101,7 @@ const useTable = (props) => {
             }
         });
     }
+
     const handleSearchCateChange = (e) => {
         setSearchTerm({
             searchFunc: items => {
@@ -114,6 +113,7 @@ const useTable = (props) => {
             }
         });
     }
+
     const handleSearchProductChange = (e) => {
         setSearchTerm({
             searchFunc: items => {
@@ -138,6 +138,18 @@ const useTable = (props) => {
         });
     }
 
+    const handleSearchCustomerChange = (e) => {
+        setSearchTerm({
+            searchFunc: items => {
+                if (e.target.value === "")
+                    return items;
+                else
+                    return items.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
+
+            }
+        });
+    }
+
     const getStatusText = (status) => {
         switch (status) {
             case 0:
@@ -153,6 +165,21 @@ const useTable = (props) => {
         }
     };
 
+    const handleSearchContactChange = (e) => {
+        setSearchTerm({
+            searchFunc: items => {
+                if (e.target.value === "")
+                    return items;
+                else {
+                    console.log(items)
+                    return items.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase()
+                        || item.title.toLowerCase().includes(e.target.value.toLowerCase())
+                    ))
+                }
+            }
+        });
+    }
+
     const handleSearchOrderChange = (e) => {
         setSearchTerm({
             searchFunc: items => {
@@ -161,7 +188,10 @@ const useTable = (props) => {
                 else {
                     return items.filter((item) => {
                         const statusText = getStatusText(item.status);
-                        return statusText && statusText.toLowerCase().includes(e.target.value.toLowerCase());
+                        return (
+                            (statusText && statusText.toLowerCase().includes(e.target.value.toLowerCase())) ||
+                            item.id.toLowerCase().includes(e.target.value.toLowerCase())
+                        );
                     });
                 }
             }
@@ -189,7 +219,9 @@ const useTable = (props) => {
         handleSearchBranchChange,
         handleSearchCateChange,
         handleSearchProductChange,
+        handleSearchCustomerChange,
         handleSearchUserChange,
+        handleSearchContactChange,
         handleSearchOrderChange,
         getStatusText,
         TblPagination,

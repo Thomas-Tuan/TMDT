@@ -1,12 +1,7 @@
-import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import categoryApi from '../api/categoryApi';
 
 const useCategories = () => {
-    const [categories, setCategories] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-
-
     const handleDeleteCate = async (id) => {
         try {
 
@@ -90,24 +85,7 @@ const useCategories = () => {
 
     };
 
-    useEffect(() => {
-        setIsLoading(true);
-        fetchCategoryList();
-    }, [])
-
-    const fetchCategoryList = async () => {
-        try {
-            const response = await categoryApi.getAll();
-            setIsLoading(false);
-            setCategories(response);
-        } catch (error) {
-            console.log("Error to fetch API: ", error.message);
-        }
-    }
     return {
-        categories,
-        isLoading,
-        setCategories,
         handleSubmit,
         handleDeleteCate
     };

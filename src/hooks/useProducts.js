@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import productApi from '../api/productApi';
 
 const useProducts = () => {
-    const [products, setProducts] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleDeletePro = async (id) => {
@@ -85,25 +82,7 @@ const useProducts = () => {
 
     };
 
-    useEffect(() => {
-        setIsLoading(true);
-        fetchProductList();
-    }, [])
-
-    const fetchProductList = async () => {
-        try {
-            const response = await productApi.getAll();
-            setIsLoading(false);
-            setProducts(response);
-        } catch (error) {
-            console.log("Error to fetch API: ", error.message);
-        }
-    }
-
-
     return {
-        products,
-        isLoading,
         handleSubmit,
         handleDeletePro,
     };

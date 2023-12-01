@@ -17,6 +17,16 @@ const RequireAuth = () => {
         return <Outlet />;
     }
     else if (checkedRoles() === undefined) {
+        toast.error("Vui lòng đăng nhập trước !!!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
         return <Navigate to="/admin/login" state={{ from: location }} replace />;
     }
     else {

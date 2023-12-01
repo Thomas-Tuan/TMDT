@@ -6,16 +6,14 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useUIContext } from "../../context/ui";
 import { Colors } from "../../styles/theme";
 
 const Navbar = () => {
-    const { setShowSearchBox } = useUIContext();
     const [anchorEl1, setAnchorEl1] = useState(null);
     const [anchorEl2, setAnchorEl2] = useState(null);
     const navigate = useNavigate();
 
-    const handleNavigateToCart = () => {
+    const handleNavigateToProduct = () => {
         navigate('/product')
     }
 
@@ -84,10 +82,14 @@ const Navbar = () => {
                                             fontWeight: "bold",
                                             p: 2,
                                         }}
-                                        key={idx} onClick={() => {
-                                            handleNavigateToCart();
+                                        key={idx}
+                                        onClick={() => {
+                                            handleNavigateToProduct();
                                             handleClose();
-                                        }}>{item}</MenuItem>
+                                        }}
+                                    >
+                                        {item}
+                                    </MenuItem>
                                 );
                             })
                         }
@@ -112,7 +114,14 @@ const Navbar = () => {
                                             fontWeight: "bold",
                                             p: 2,
                                         }}
-                                        key={idx} onClick={handleClose}>{item}</MenuItem>
+                                        key={idx}
+                                        onClick={() => {
+                                            handleNavigateToProduct();
+                                            handleClose();
+                                        }}
+                                    >
+                                        {item}
+                                    </MenuItem>
                                 );
                             })
                         }
@@ -133,11 +142,15 @@ const Navbar = () => {
                     justifyContent: "center",
                     alignItems: "center",
                 }}
-                onClick={() => setShowSearchBox(true)}>
-                <ListItemIcon sx={{
-                    minWidth: 1,
-                    color: Colors.white,
-                }}>
+            >
+                <ListItemIcon
+                    onClick={() => {
+                        handleNavigateToProduct();
+                    }}
+                    sx={{
+                        minWidth: 1,
+                        color: Colors.white,
+                    }}>
                     <SearchIcon />
                 </ListItemIcon>
             </ListItemButton>

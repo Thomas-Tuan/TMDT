@@ -1,4 +1,6 @@
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
+    Box,
     Button,
     Chip,
     Container,
@@ -13,19 +15,18 @@ import {
 } from '@mui/material';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
-import useUsers from '../../../hooks/useUsers';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import userApi from '../../../api/userApi';
+import useUsers from '../../../hooks/useUsers';
 
 
 
 const AddEditUser = () => {
-    const { role } = useUsers();
     const { id } = useParams();
     const { handleSubmit } = useUsers();
     const isEditMode = !!id;
+    const [isLoading, setIsLoading] = useState(false);
 
     const [initialValues, setInitialValues] = useState({
         Id: '',
@@ -38,6 +39,23 @@ const AddEditUser = () => {
     });
     const [showHiddenPass, setShowHiddenPass] = useState(false)
     const [showHiddenConfirmPass, setShowHiddenConfirmPass] = useState(false)
+
+    const [role, setRole] = useState([]);
+
+    useEffect(() => {
+        setIsLoading(true);
+        fetchRoleList();
+    }, [])
+
+    const fetchRoleList = async () => {
+        try {
+            const response = await userApi.getAllRole();
+            setIsLoading(false);
+            setRole(response);
+        } catch (error) {
+            console.log("Error to fetch API: ", error.message);
+        }
+    }
 
     useEffect(() => {
         if (id !== undefined) {
@@ -55,7 +73,7 @@ const AddEditUser = () => {
                     };
                     setInitialValues(newInitialValues)
                 } catch (error) {
-                    console.error('Lỗi không được lấy dữ liệu sản phẩm:', error);
+                    console.error('Lỗi không được lấy dữ liệu người dùng:', error);
                 }
             }
             getUserById(id);
@@ -109,26 +127,30 @@ const AddEditUser = () => {
     };
 
 
-    const validationSchema = Yup.object().shape({
+    const validationSchema = isEditMode ? Yup.object().shape({
         userName: Yup.string().required('Không được bỏ trống'),
         Email: Yup.string().email("Không đúng cú pháp email !").required('Không được bỏ trống'),
-        Password: Yup.string().min(5, 'Mật khẩu phải 5 ký tự trở lên'),
-        confirmPass: Yup.string().oneOf([Yup.ref('Password')], 'Mật khẩu không trùng khớp')
-    });
+    })
+        : Yup.object().shape({
+            userName: Yup.string().required('Không được bỏ trống'),
+            Email: Yup.string().email("Không đúng cú pháp email !").required('Không được bỏ trống'),
+            Password: Yup.string().min(5, 'Mật khẩu phải 5 ký tự trở lên').required('Không được bỏ trống'),
+            confirmPass: Yup.string().oneOf([Yup.ref('Password')], 'Mật khẩu không trùng khớp').required('Không được bỏ trống')
+        })
 
     return (
-        <Formik validationSchema={validationSchema}
-            initialValues={initialValues}
-            enableReinitialize={true}
-            onSubmit={handleSubmit} >
-            {({ values, handleChange, handleBlur }) => {
-                return (
-                    <Container disableGutters maxWidth="lg">
+        <Container disableGutters maxWidth="lg">
+            <Formik validationSchema={validationSchema}
+                initialValues={initialValues}
+                enableReinitialize={true}
+                onSubmit={handleSubmit} >
+                {({ values, handleChange, handleBlur }) => {
+                    return (
                         <Form>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} md={6}>
-                                    <InputLabel >Tên tài khoản</InputLabel>
                                     <Field
+                                        label="Tên tài khoản"
                                         fullWidth
                                         value={values.userName}
                                         onChange={handleChange}
@@ -141,8 +163,8 @@ const AddEditUser = () => {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12} md={6}>
-                                    <InputLabel>Email</InputLabel>
                                     <Field
+                                        label="Email"
                                         fullWidth
                                         value={values.Email}
                                         onChange={handleChange}
@@ -155,9 +177,9 @@ const AddEditUser = () => {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12} md={6}>
-                                    <InputLabel>Quyền</InputLabel>
-                                    {role.length !== 0 ?
+                                    {role.length !== 0 && !isLoading ?
                                         <Field
+                                            label="Quyền"
                                             fullWidth
                                             name="Role"
                                             value={values.Role}
@@ -179,6 +201,7 @@ const AddEditUser = () => {
                                 <Grid item xs={12} md={6}>
                                     <InputLabel>Trạng thái </InputLabel>
                                     <Field
+                                        label="Trạng thái"
                                         fullWidth
                                         name="isLock"
                                         value={values.isLock}
@@ -194,9 +217,9 @@ const AddEditUser = () => {
                                     </Field>
                                 </Grid>
                                 <Grid item xs={12} md={6}>
-                                    <InputLabel >Mật khẩu</InputLabel>
                                     <Field
                                         fullWidth
+                                        label="Mật khẩu"
                                         type={showHiddenPass ? 'text' : 'password'}
                                         value={values.Password}
                                         onChange={handleChange}
@@ -222,9 +245,10 @@ const AddEditUser = () => {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12} md={6}>
-                                    <InputLabel >Xác nhận mật khẩu</InputLabel>
+                                    <InputLabel ></InputLabel>
                                     <Field
                                         fullWidth
+                                        label="Xác nhận mật khẩu"
                                         type={showHiddenConfirmPass ? 'text' : 'password'}
                                         value={values.confirmPass}
                                         onChange={handleChange}
@@ -257,12 +281,16 @@ const AddEditUser = () => {
                                 </Grid>
                             </Grid>
                         </Form>
-                    </Container>
-
-                )
-            }
-            }
-        </Formik>
+                    )
+                }
+                }
+            </Formik>
+            <Box mt={2}>
+                <Button variant="contained" color="primary" component={Link} to='/admin/user'>
+                    Trở về trang danh sách người dùng
+                </Button>
+            </Box>
+        </Container>
     );
 };
 

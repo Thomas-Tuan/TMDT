@@ -17,13 +17,13 @@ import {
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { v4 } from "uuid";
 import * as Yup from 'yup';
+import branchApi from '../../../api/branchApi';
+import categoryApi from '../../../api/categoryApi';
 import productApi from '../../../api/productApi';
 import { ImagesBg } from '../../../asset';
-import useBranches from '../../../hooks/useBranches';
-import useCategories from '../../../hooks/useCategories';
 import useProducts from '../../../hooks/useProducts';
 import { storage } from '../../../library/firebase';
 import './style.scss';
@@ -61,14 +61,35 @@ const AddEditProduct = () => {
     const { handleSubmit } = useProducts();
     const { id } = useParams();
 
+    const [branches, setBranches] = useState([]);
+    const [categories, setCategories] = useState([]);
     const isEditMode = !!id;
-    const { categories } = useCategories();
-    const { branches } = useBranches();
     const [newImage, setNewImage] = useState('')
     const [newImage1, setNewImage1] = useState('')
 
     const [newImage2, setNewImage2] = useState('')
 
+    useEffect(() => {
+        fetchBranchList();
+        fetchCategoryList();
+    }, [])
+
+    const fetchBranchList = async () => {
+        try {
+            const response = await branchApi.getAll();
+            setBranches(response);
+        } catch (error) {
+            console.log("Error to fetch API: ", error.message);
+        }
+    }
+    const fetchCategoryList = async () => {
+        try {
+            const response = await categoryApi.getAll();
+            setCategories(response);
+        } catch (error) {
+            console.log("Error to fetch API: ", error.message);
+        }
+    }
     useEffect(() => {
         if (id !== undefined) {
             const getProductById = async (id) => {
@@ -87,9 +108,7 @@ const AddEditProduct = () => {
                     updatedInitialValues.Image3 = response.image3;
                     updatedInitialValues.categoryId = response.categoryId;
                     updatedInitialValues.branchId = response.branchId;
-
                     formikRef.current.setValues(updatedInitialValues);
-
                     if (ckEditorRef.current && ckEditorRef.current.editorInstance) {
                         ckEditorRef.current.editorInstance.setData(updatedInitialValues.Description);
                     }
@@ -171,7 +190,6 @@ const AddEditProduct = () => {
                     <Grid item xs={12}>
                         <Button sx={{
                             margin: "0 auto"
-
                         }}
                             component="label"
                             variant="contained" startIcon={<CloudUploadIcon />}>
@@ -193,20 +211,21 @@ const AddEditProduct = () => {
     });
 
     return (
-        <Formik validationSchema={validationSchema}
-            initialValues={initialValues}
-            innerRef={formikRef}
-            onSubmit={handleSubmit} >
-            {({ values, handleChange, handleBlur, setFieldValue }) => {
-                return (
-                    <Container disableGutters maxWidth="lg">
+        <Container disableGutters maxWidth="lg">
+            <Formik validationSchema={validationSchema}
+                initialValues={initialValues}
+                innerRef={formikRef}
+                onSubmit={handleSubmit} >
+                {({ values, handleChange, handleBlur, setFieldValue }) => {
+                    return (
+
                         <Form>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} md={6} sm={12}  >
                                     <Grid container spacing={1}>
                                         <Grid item xs={12} md={12}>
-                                            <InputLabel >Tên sản phẩm</InputLabel>
                                             <Field
+                                                label="Tên sản phẩm"
                                                 fullWidth
                                                 value={values.Name}
                                                 onChange={handleChange}
@@ -216,7 +235,7 @@ const AddEditProduct = () => {
                                             </Field>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
-                                            <InputLabel>Thương hiệu</InputLabel>
+                                            <InputLabel >Thương hiệu</InputLabel>
                                             <Field
                                                 fullWidth
                                                 name="branchId"
@@ -232,7 +251,7 @@ const AddEditProduct = () => {
                                             </Field>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
-                                            <InputLabel>Danh mục</InputLabel>
+                                            <InputLabel >Danh mục</InputLabel>
                                             <Field
                                                 fullWidth
                                                 name="categoryId"
@@ -248,8 +267,8 @@ const AddEditProduct = () => {
                                             </Field>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
-                                            <InputLabel >Giá tiền</InputLabel>
                                             <Field
+                                                label="Giá tiền"
                                                 fullWidth
                                                 as={TextField}
                                                 value={values.Price}
@@ -262,9 +281,9 @@ const AddEditProduct = () => {
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
-                                            <InputLabel >Số lượng</InputLabel>
                                             <Field
                                                 fullWidth
+                                                label="Số lượng"
                                                 as={TextField}
                                                 value={values.Quantity}
                                                 onChange={handleChange} onBlur={handleBlur}
@@ -337,12 +356,16 @@ const AddEditProduct = () => {
 
                             </Grid>
                         </Form>
-                    </Container>
-
-                )
-            }
-            }
-        </Formik>
+                    )
+                }
+                }
+            </Formik>
+            <Box mt={2}>
+                <Button variant="contained" color="primary" component={Link} to='/admin/product'>
+                    Trở về trang danh sách sẩn phẩm
+                </Button>
+            </Box>
+        </Container>
     );
 };
 

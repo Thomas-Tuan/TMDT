@@ -10,11 +10,12 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useBranches from '../../../hooks/useBranches';
 import useDeleteForm from '../../../hooks/useDeleteForm';
 import useTable from '../../../hooks/useTable';
 import AddEditBranch from './AddEditBranch';
+import branchApi from '../../../api/branchApi';
 const headCells = [
     {
         Id: "branchId",
@@ -28,13 +29,16 @@ const headCells = [
 ]
 
 export default function BranchList() {
-    const { branches, isLoading, handleSubmit } = useBranches();
+    const { handleSubmit } = useBranches();
+    const [branches, setBranches] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const itemGet = useTable(branches);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const initialValues = { Id: 0, Name: '' };
-
     const [newValue, setNewValue] = useState({ ...initialValues });
     const { handleClickOpen, MyDialog, } = useDeleteForm({ newValue, setNewValue });
+
     const openModal = () => {
         setIsModalOpen(true);
     };
@@ -43,6 +47,21 @@ export default function BranchList() {
         setIsModalOpen(false);
         setNewValue({});
     };
+
+    useEffect(() => {
+        setIsLoading(true);
+        fetchBranchList();
+    }, [])
+
+    const fetchBranchList = async () => {
+        try {
+            const response = await branchApi.getAll();
+            setIsLoading(false);
+            setBranches(response);
+        } catch (error) {
+            console.log("Error to fetch API: ", error.message);
+        }
+    }
 
     return (
         <Paper sx={{
@@ -119,10 +138,10 @@ export default function BranchList() {
                             <TableBody>
                                 {itemGet.listAfterPagingAndSorting().map((item, idx) => (
                                     <TableRow
-                                        key={item.name}
+                                        key={item.id}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell align="left">{item.id}</TableCell>
+                                        <TableCell align="left">{idx + 1}</TableCell>
                                         <TableCell component="th" scope="row">
                                             {item.name}
                                         </TableCell>

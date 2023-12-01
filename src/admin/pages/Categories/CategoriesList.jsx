@@ -10,7 +10,8 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import categoryApi from '../../../api/categoryApi';
 import useCategories from '../../../hooks/useCategories';
 import useDeleteForm from '../../../hooks/useDeleteForm';
 import useTable from '../../../hooks/useTable';
@@ -28,13 +29,31 @@ const headCells = [
 ]
 
 export default function CategoriesList() {
-    const { categories, isLoading, handleSubmit } = useCategories();
+    const { handleSubmit } = useCategories();
+    const [categories, setCategories] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const itemGet = useTable(categories);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const initialValues = { Id: 0, Title: '' };
-
     const [newValue, setNewValue] = useState({ ...initialValues });
     const { handleClickOpen, MyDialog, } = useDeleteForm({ newValue, setNewValue });
+
+    useEffect(() => {
+        setIsLoading(true);
+        fetchCategoryList();
+    }, [])
+
+    const fetchCategoryList = async () => {
+        try {
+            const response = await categoryApi.getAll();
+            setIsLoading(false);
+            setCategories(response);
+        } catch (error) {
+            console.log("Error to fetch API: ", error.message);
+        }
+    }
+
     const openModal = () => {
         setIsModalOpen(true);
     };
@@ -118,10 +137,10 @@ export default function CategoriesList() {
                         <TableBody>
                             {itemGet.listAfterPagingAndSorting().map((item, idx) => (
                                 <TableRow
-                                    key={item.title}
+                                    key={item.id}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
-                                    <TableCell align="left">{item.id}</TableCell>
+                                    <TableCell align="left">{idx + 1}</TableCell>
                                     <TableCell component="th" scope="row">
                                         {item.title}
                                     </TableCell>

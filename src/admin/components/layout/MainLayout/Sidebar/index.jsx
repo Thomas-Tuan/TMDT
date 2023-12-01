@@ -1,4 +1,4 @@
-import { FilterFrames, PanoramaHorizontalOutlined } from '@mui/icons-material';
+import { FeedOutlined, FilterFrames, PanoramaHorizontalOutlined, PortraitOutlined } from '@mui/icons-material';
 import AccountTreeRounded from '@mui/icons-material/AccountTreeRounded';
 import CategoryOutlined from '@mui/icons-material/CategoryOutlined';
 import LabelIcon from '@mui/icons-material/Label';
@@ -32,6 +32,12 @@ const itemsMenu = [
         link: "/admin/user"
     },
     {
+        title: "Khách hàng",
+        icon: <PortraitOutlined />,
+        state: "customer",
+        link: "/admin/customer"
+    },
+    {
         title: "Danh mục",
         icon: <CategoryOutlined />,
         state: "category",
@@ -52,9 +58,14 @@ const itemsMenu = [
     {
         title: "Đơn hàng",
         icon: <FilterFrames />,
-        state: "dashboard",
+        state: "order",
         link: "/admin/order"
-
+    },
+    {
+        title: "Liên hệ",
+        icon: <FeedOutlined />,
+        state: "contact",
+        link: "/admin/contact"
     },
 ]
 

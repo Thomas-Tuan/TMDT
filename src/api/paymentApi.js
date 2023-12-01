@@ -1,8 +1,12 @@
 import axiosFile from "./axiosFile";
 
 const paymentApi = {
-    create(data) {
-        const url = `/Payments/CreatePayment`;
+    createPaymentWithVnPay(data) {
+        const url = `/Payments/CreatePaymentWithVnPay`;
+        return axiosFile.post(url, data);
+    },
+    createPaymentWithPaypal(data) {
+        const url = `/Payments/CreatePaymentWithPaypal`;
         return axiosFile.post(url, data);
     },
 }

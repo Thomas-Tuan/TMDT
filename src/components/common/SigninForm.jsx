@@ -2,7 +2,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, IconButton, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import loginApi from '../../api/loginApi';
@@ -143,8 +143,9 @@ const SignInForm = ({ onSwitchMode }) => {
                   </Button>
                 </Stack>
               </Form>
+              <Typography textAlign="end" component={Link} to="/resetPass" variant='subtitle1'>Quên mật khẩu?</Typography>
               <Stack direction="row" spacing={2} alignItems="center">
-                <Typography>Không có tài khoản?</Typography>
+                <Typography variant='subtitle1'>Không có tài khoản?</Typography>
                 <Button
                   onClick={() => onSwitchMode(ScreenMode.SIGN_UP)}
                   variant='contained'

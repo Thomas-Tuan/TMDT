@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { addItem } from "../../Redux/Cart/CartSlice";
-import useBranches from "../../hooks/useBranches";
-import useCategories from "../../hooks/useCategories";
-import usePaginationProducts from '../../hooks/usePaginationProduct';
-import { Colors } from "../../styles/theme";
+import branchApi from '../../api/branchApi';
+import categoryApi from '../../api/categoryApi';
 import { ImagesBg } from '../../asset';
 import MyBreadcrumb from '../../components/common/MyBreadcrumb';
+import usePaginationProducts from '../../hooks/usePaginationProduct';
+import { Colors } from "../../styles/theme";
 
 
 const UserProductList = () => {
@@ -19,8 +19,8 @@ const UserProductList = () => {
     const totalPages = Math.ceil(productsPagination.totalCount / 10);
 
     const navigate = useNavigate();
-    const { categories } = useCategories();
-    const { branches } = useBranches();
+    const [branches, setBranches] = useState([]);
+    const [categories, setCategories] = useState([]);
     const dispatch = useDispatch();
 
     const [query, setQuery] = useState('');
@@ -28,8 +28,30 @@ const UserProductList = () => {
     const [selectedBranch, setSelectedBranch] = useState(0);
 
     const [minPrice, setMinPrice] = useState(1000000);
-    const [maxPrice, setMaxPrice] = useState(100000000);
+    const [maxPrice, setMaxPrice] = useState(500000000);
     const [sortOption, setSortOption] = useState('az');
+
+    useEffect(() => {
+        fetchBranchList();
+        fetchCategoryList();
+    }, [])
+
+    const fetchBranchList = async () => {
+        try {
+            const response = await branchApi.getAll();
+            setBranches(response);
+        } catch (error) {
+            console.log("Error to fetch API: ", error.message);
+        }
+    }
+    const fetchCategoryList = async () => {
+        try {
+            const response = await categoryApi.getAll();
+            setCategories(response);
+        } catch (error) {
+            console.log("Error to fetch API: ", error.message);
+        }
+    }
 
 
     useEffect(() => {

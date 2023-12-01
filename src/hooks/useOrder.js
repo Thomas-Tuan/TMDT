@@ -1,12 +1,7 @@
-import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import orderApi from '../api/orderApi';
 
 const useOrders = () => {
-    const [orders, setOrders] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-
-
     const handleDeleteOrder = async (id) => {
         try {
 
@@ -71,24 +66,7 @@ const useOrders = () => {
 
     };
 
-    useEffect(() => {
-        setIsLoading(true);
-        fetchOrderList();
-    }, [])
-
-    const fetchOrderList = async () => {
-        try {
-            const response = await orderApi.getAll();
-            setIsLoading(false);
-            setOrders(response);
-        } catch (error) {
-            console.log("Error to fetch API: ", error.message);
-        }
-    }
     return {
-        orders,
-        isLoading,
-        setOrders,
         handleSubmit,
         handleDeleteOrder
     };

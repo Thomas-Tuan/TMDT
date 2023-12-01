@@ -10,10 +10,10 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import productApi from '../../../api/productApi';
 import useDeleteForm from '../../../hooks/useDeleteForm';
-import useProducts from '../../../hooks/useProducts';
 import useTable from '../../../hooks/useTable';
 
 const headCells = [
@@ -42,12 +42,29 @@ const headCells = [
 ]
 
 export default function ProductsList() {
-    const { products, isLoading } = useProducts();
-    const itemGet = useTable(products);
     const [newValue, setNewValue] = useState({});
-
     const { handleClickOpen, MyDialog, } = useDeleteForm({ newValue, setNewValue });
     const location = useLocation();
+    const [products, setProducts] = useState([]);
+
+    const [isLoading, setIsLoading] = useState(false);
+    const itemGet = useTable(products);
+
+    useEffect(() => {
+        setIsLoading(true);
+        fetchProductList();
+    }, [])
+
+    const fetchProductList = async () => {
+        try {
+            const response = await productApi.getAll();
+            setIsLoading(false);
+            setProducts(response);
+        } catch (error) {
+            console.log("Error to fetch API: ", error.message);
+        }
+    }
+
     return (
         <Paper sx={{
             overflow: "auto",
@@ -125,7 +142,7 @@ export default function ProductsList() {
                                         key={item.id}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell align="left">{item.id}</TableCell>
+                                        <TableCell align="left">{idx + 1}</TableCell>
                                         <TableCell component="th" scope="row">
                                             <img src={item.imgMain} alt='Product Img' height='60' width='60' />
                                         </TableCell>

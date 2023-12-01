@@ -1,11 +1,7 @@
-import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import branchApi from '../api/branchApi';
 
 const useBranches = () => {
-    const [branches, setBranches] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-
 
     const handleDeleteBranch = async (id) => {
         try {
@@ -88,24 +84,7 @@ const useBranches = () => {
 
     };
 
-    useEffect(() => {
-        setIsLoading(true);
-        fetchBranchList();
-    }, [])
-
-    const fetchBranchList = async () => {
-        try {
-            const response = await branchApi.getAll();
-            setIsLoading(false);
-            setBranches(response);
-        } catch (error) {
-            console.log("Error to fetch API: ", error.message);
-        }
-    }
     return {
-        branches,
-        setBranches,
-        isLoading,
         handleSubmit,
         handleDeleteBranch
     };

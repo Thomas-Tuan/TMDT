@@ -3,20 +3,21 @@ import {
     Box,
     Button,
     CircularProgress,
-    Fade, Grid, IconButton, InputLabel, MenuItem, Modal, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography
+    Fade, Grid, IconButton, InputLabel, MenuItem, Modal, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+    Typography
 } from '@mui/material';
 
 import React, { useEffect, useState } from 'react';
 
 import { CloseOutlined } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
-import { Field, Formik, Form } from 'formik';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Field, Form, Formik } from 'formik';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import orderApi from '../../../api/orderApi';
+import useOrders from '../../../hooks/useOrder';
 import useTable from '../../../hooks/useTable';
 import { Colors } from '../../../styles/theme';
-import useOrders from '../../../hooks/useOrder';
 
 const headCells = [
     {
@@ -265,12 +266,11 @@ const EditOrder = (props) => {
                     </TableContainer>
                 }
             </Paper>
-            <Typography my={2} variant='h5'>
+            <Typography my={2} variant='h5' textAlign="center" fontWeight="bold">
                 Thông tin đơn hàng
             </Typography>
             <Paper elevation={3}
                 sx={{
-                    width: "80%",
                     padding: '20px',
                     border: '2px solid #2196F3',
                     backgroundColor: '#E3F2FD',
@@ -278,8 +278,8 @@ const EditOrder = (props) => {
                 <Grid container spacing={2}>
                     {params.customerId !== null &&
                         <Grid item xs={12}>
-                            <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                <Typography variant='body1'>
+                            <Stack direction="row" justifyContent="center" alignItems="center">
+                                <Typography mr={5} variant='body1'>
                                     Mã khách hàng
                                 </Typography>
                                 <Typography variant='body1' fontWeight="bold">
@@ -289,8 +289,8 @@ const EditOrder = (props) => {
                         </Grid>
                     }
                     <Grid item xs={12}  >
-                        <Stack direction="row" justifyContent="space-between" alignItems="center">
-                            <Typography variant='body1'>
+                        <Stack direction="row" justifyContent="center" alignItems="center">
+                            <Typography mr={5} variant='body1'>
                                 Tên người nhận
                             </Typography>
                             <Box sx={{
@@ -299,7 +299,7 @@ const EditOrder = (props) => {
                                 alignItems: 'center',
                                 flexDirection: "column"
                             }}>
-                                <Typography variant='body1'>
+                                <Typography mr={5} variant='body1'>
                                     {params.gender === 0 ? 'Anh' : 'Chị'}
                                 </Typography>
                                 <Typography variant='body1' fontWeight="bold">
@@ -309,8 +309,8 @@ const EditOrder = (props) => {
                         </Stack>
                     </Grid>
                     <Grid item xs={12}  >
-                        <Stack direction="row" justifyContent="space-between" alignItems="center">
-                            <Typography variant='body1'>
+                        <Stack direction="row" justifyContent="center" alignItems="center">
+                            <Typography mr={5} variant='body1'>
                                 Số điện thoại
                             </Typography>
                             <Typography variant='body1' fontWeight="bold">
@@ -319,10 +319,10 @@ const EditOrder = (props) => {
                         </Stack>
                     </Grid>
                     <Grid item xs={12}>
-                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                        <Stack direction="row" justifyContent="center" alignItems="center">
                             {params.email !== '' &&
                                 <>
-                                    <Typography variant='body1'>
+                                    <Typography mr={5} variant='body1'>
                                         Email
                                     </Typography>
                                     <Typography variant='body1' fontWeight="bold">
@@ -333,13 +333,13 @@ const EditOrder = (props) => {
                         </Stack>
                     </Grid>
                     <Grid item xs={12}>
-                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                        <Stack direction="row" justifyContent="center" alignItems="center">
                             <Box sx={{
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: 'center',
                             }}>
-                                <Typography mr={2} variant='body1'>
+                                <Typography mr={5} variant='body1'>
                                     Trạng thái đơn hàng
                                 </Typography>
                                 <IconButton
@@ -358,6 +358,11 @@ const EditOrder = (props) => {
                     </Grid>
                 </Grid>
             </Paper>
+            <Box mt={2}>
+                <Button variant="contained" color="primary" component={Link} to='/admin/order'>
+                    Trở về trang danh sách đơn đặt hàng
+                </Button>
+            </Box>
         </>
     );
 };

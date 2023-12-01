@@ -4,16 +4,20 @@ import RequireAuth from "../admin/components/common/RequireAuth";
 import MainLayout from "../admin/components/layout/MainLayout/MainLayout";
 import BranchList from "../admin/pages/Branches/BranchList";
 import CategoriesList from "../admin/pages/Categories/CategoriesList";
+import CustomerList from "../admin/pages/Customer/CustomerList";
+import EditCustomer from "../admin/pages/Customer/EditCustomer";
 import DashboardPage from "../admin/pages/Dashboard/DashboardPage";
 import AdminLogin from "../admin/pages/Login/LoginAdmin";
+import EditOrder from "../admin/pages/Orders/EditOrder";
+import OrdersList from "../admin/pages/Orders/OrderList";
 import AddEditProduct from "../admin/pages/Products/AddEditProduct";
 import ProductsList from "../admin/pages/Products/ProductList";
 import AddEditUser from "../admin/pages/Users/AddEditUser";
 import UsersList from "../admin/pages/Users/UserList";
 import { AuthProvider } from "../context/auth";
 import NotFound from "../pages/NotFound";
-import OrdersList from "../admin/pages/Orders/OrderList";
-import EditOrder from "../admin/pages/Orders/EditOrder";
+import ContactDetail from "../admin/pages/Contacts/ContactDetail";
+import ContactList from "../admin/pages/Contacts/ContactsList";
 
 const AdminRoutes = () => {
     return (
@@ -28,10 +32,19 @@ const AdminRoutes = () => {
                         <Route path="/dashboard" element={<MainLayout />} >
                             < Route index element={<DashboardPage />} />
                         </Route>
+                        <Route path="/contact" element={<MainLayout />} >
+                            < Route index element={<ContactList />} />
+                            <Route path="detail/:id" element={<ContactDetail />} />
+                        </Route>
                         <Route path="/user" element={<MainLayout />} >
                             < Route index element={<UsersList />} />
                             <Route path="create" element={<AddEditUser />} />
                             <Route path="edit/:id" element={<AddEditUser />} />
+                        </Route>
+                        <Route path="/customer" element={<MainLayout />} >
+                            < Route index element={<CustomerList />} />
+                            <Route path="create" element={<EditCustomer />} />
+                            <Route path="edit/:id" element={<EditCustomer />} />
                         </Route>
                         <Route path="/branch" element={<MainLayout />} >
                             < Route index element={<BranchList />} />

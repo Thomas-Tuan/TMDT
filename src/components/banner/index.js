@@ -1,6 +1,7 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Colors } from "../../styles/theme";
 import { ImagesBg } from "../../asset";
+import { Link } from "react-router-dom";
 
 
 export default function Banner() {
@@ -69,7 +70,8 @@ export default function Banner() {
                 color: Colors.white,
                 textTransform: "uppercase",
                 zIndex: 1,
-              }}>
+              }}
+                component={Link} to='/product'>
                 Tìm hiểu thêm
               </Typography>
             </Stack>

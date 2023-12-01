@@ -1,12 +1,9 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import userApi from '../api/userApi';
 
 const useUsers = () => {
-    const [user, setUser] = useState([]);
-    const [role, setRole] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+
     const navigate = useNavigate();
 
     const handleDeleteUser = async (id) => {
@@ -87,41 +84,7 @@ const useUsers = () => {
 
     };
 
-    useEffect(() => {
-        setIsLoading(true);
-        fetchUserList();
-    }, [])
-
-    const fetchUserList = async () => {
-        try {
-            const response = await userApi.getAllUser();
-            setIsLoading(false);
-            setUser(response);
-        } catch (error) {
-            console.log("Error to fetch API: ", error.message);
-        }
-    }
-
-    useEffect(() => {
-        setIsLoading(true);
-        fetchRoleList();
-    }, [])
-
-    const fetchRoleList = async () => {
-        try {
-            const response = await userApi.getAllRole();
-            setIsLoading(false);
-            setRole(response);
-        } catch (error) {
-            console.log("Error to fetch API: ", error.message);
-        }
-    }
-
-
     return {
-        role,
-        user,
-        isLoading,
         handleSubmit,
         handleDeleteUser,
     };

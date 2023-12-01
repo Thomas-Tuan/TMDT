@@ -14,6 +14,7 @@ import { Box } from "@mui/system";
 import { FooterTitle, SubscribeTf } from "../../styles/footer";
 import "../../styles/footer/style.scss";
 import { Colors } from "../../styles/theme";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
     return (
@@ -51,22 +52,22 @@ export default function Footer() {
                 <Grid item md={6} lg={2} sm={3} >
                     <List>
                         <ListItemText>
-                            <Typography lineHeight={2} variant="body" fontWeight="bold" textTransform="uppercase">
+                            <Typography component={Link} to="/" lineHeight={2} variant="body" fontWeight="bold" textTransform="uppercase">
                                 Trang chủ
                             </Typography>
                         </ListItemText>
                         <ListItemText>
-                            <Typography lineHeight={2} variant="body" fontWeight="bold" textTransform="uppercase">
+                            <Typography component={Link} to="/product" lineHeight={2} variant="body" fontWeight="bold" textTransform="uppercase">
                                 Sản phẩm
                             </Typography>
                         </ListItemText>
                         <ListItemText>
-                            <Typography lineHeight={2} variant="body" fontWeight="bold" textTransform="uppercase">
+                            <Typography component={Link} to="/about" lineHeight={2} variant="body" fontWeight="bold" textTransform="uppercase">
                                 Giới thiệu
                             </Typography>
                         </ListItemText>
                         <ListItemText>
-                            <Typography lineHeight={2} variant="body" fontWeight="bold" textTransform="uppercase">
+                            <Typography component={Link} to="/contact" lineHeight={2} variant="body" fontWeight="bold" textTransform="uppercase">
                                 Liên hệ
                             </Typography>
                         </ListItemText>
