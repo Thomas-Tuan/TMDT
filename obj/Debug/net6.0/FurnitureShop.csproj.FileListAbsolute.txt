@@ -303,3 +303,14 @@ D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\Microsoft.Extensions.Identity.Sto
 D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\Scrutor.dll
 D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.dll
 D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
+D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\BouncyCastle.Cryptography.dll
+D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\MailKit.dll
+D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\MimeKit.dll
+D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\System.Formats.Asn1.dll
+D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\System.Text.Encoding.CodePages.dll
+D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll
+D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\BraintreeHttp-Dotnet.dll
+D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\Source.dll
+D:\General\TMDT\FurnitureShop\bin\Debug\net6.0\Otp.NET.dll

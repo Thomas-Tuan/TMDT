@@ -1,7 +1,6 @@
 ﻿using FurnitureShop.Model;
 using FurnitureShop.Repositories.OrderRepo;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureShop.Controllers
@@ -19,7 +18,7 @@ namespace FurnitureShop.Controllers
         }
         [HttpGet]
         [Route("GetList")]
-        public async Task<IActionResult> GetAllOrders()
+        public async Task<IActionResult> GetAllOrder()
         {
             try
             {
@@ -30,7 +29,7 @@ namespace FurnitureShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpGet,AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         [Route("GetById/{id}")]
         public async Task<IActionResult> GetOrderById(string id)
         {
@@ -38,7 +37,7 @@ namespace FurnitureShop.Controllers
             return Order == null ? NotFound() : Ok(Order);
         }
 
-        [HttpPut]
+        [HttpPut, AllowAnonymous]
         [Route("Update/{id}")]
         public async Task<IActionResult> UpdateOrder(string id, [FromBody] OrderModel model)
         {
@@ -57,15 +56,29 @@ namespace FurnitureShop.Controllers
             return Ok();
         }
 
-        [HttpPost,AllowAnonymous]
+        [HttpPost, AllowAnonymous]
         [Route("CreateOrder")]
-        public async Task<IActionResult> AddOrder([FromBody]OrderModel model)
+        public async Task<IActionResult> AddOrder([FromBody] OrderModel model)
         {
             try
             {
                 var newOrderId = await _orderRepo.AddOrderAsync(model);
                 var Order = await _orderRepo.GetOrderAsync(newOrderId);
                 return Order == null ? NotFound() : Ok(Order);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet, AllowAnonymous]
+        [Route("GetUserOrder/{id}")]
+        public async Task<IActionResult> GetUserOrder(string id)
+        {
+            try
+            {
+                return Ok(await _orderRepo.GetUserOrderAsync(id));
             }
             catch
             {

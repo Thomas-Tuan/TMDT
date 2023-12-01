@@ -19,6 +19,7 @@ namespace FurnitureShop.Data
         public DbSet<Voucher>? Vouchers { get; set; }
         public DbSet<Review>? Reviews { get; set; }
         public DbSet<Customer>? Customers { get; set; }
+        public DbSet<Contact>? Contacts { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -36,6 +37,12 @@ namespace FurnitureShop.Data
                 .WithMany(c => c!.Products)
                 .HasForeignKey(p => p.categoryId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.OrderDetails)
+                .WithOne(od => od.Orders)
+                .HasForeignKey(od => od.orderId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Order>().Property(o => o.Id)
                 .HasDefaultValueSql("('OR-' + FORMAT(GETDATE(), 'yyyyMMddHHmmss'))")

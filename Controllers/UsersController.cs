@@ -20,7 +20,7 @@ namespace FurnitureShop.Controllers
         }
 
         [HttpGet("GetAllRoles")]
-        public async Task<IActionResult> GetAllRoles()
+        public async Task<IActionResult> GetAllRole()
         {
             var roles = await _userRepo.GetAllRolesAsync();
             return Ok(roles);
@@ -28,7 +28,7 @@ namespace FurnitureShop.Controllers
 
         [HttpGet]
         [Route("GetAllUsers")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUser()
         {
             try
             {
@@ -40,7 +40,7 @@ namespace FurnitureShop.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet,AllowAnonymous]
         [Route("GetById/{id}")]
         public async Task<IActionResult> GetUserById(string id)
         {
@@ -71,7 +71,7 @@ namespace FurnitureShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut]
+        [HttpPut,AllowAnonymous]
         [Route("Update/{id}")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserModel model)
         {

@@ -1,6 +1,5 @@
 ﻿using FurnitureShop.Model;
 using FurnitureShop.Repositories.Account;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureShop.Controllers
@@ -43,6 +42,5 @@ namespace FurnitureShop.Controllers
             }
             return Ok(result);
         }
-
     }
 }

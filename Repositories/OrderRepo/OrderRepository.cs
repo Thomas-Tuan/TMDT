@@ -48,14 +48,21 @@ namespace FurnitureShop.Repositories.OrderRepo
             var deleteOrder = _context.Orders!.SingleOrDefault(b => b.Id == id);
             if (deleteOrder != null)
             {
-                _context.Orders!.Remove(deleteOrder);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Orders!.Remove(deleteOrder);
+                    await _context.SaveChangesAsync();
+                }
+                catch(Exception ex)
+                {
+                    throw;
+                }
             }
         }
 
         public async Task<List<OrderModel>> GetAllOrderAsync()
         {
-            var Order = await _context.Orders!.ToListAsync();
+            var Order = await _context.Orders!.OrderByDescending(c => c.Date).ToListAsync();
             return _mapper.Map<List<OrderModel>>(Order);
         }
 
@@ -79,6 +86,12 @@ namespace FurnitureShop.Repositories.OrderRepo
                 orderDetails = newOrderDetail,
             };
             return orderEditModel;
+        }
+
+        public async Task<List<OrderModel>> GetUserOrderAsync(string id)
+        {
+            var Order = await _context.Orders!.Where(i=>i.customerId!.Contains(id)).OrderByDescending(c => c.Date).ToListAsync();
+            return _mapper.Map<List<OrderModel>>(Order);
         }
 
         public async Task UpdateOrderAsync(string id, OrderModel model)

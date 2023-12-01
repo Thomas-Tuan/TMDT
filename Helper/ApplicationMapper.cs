@@ -18,6 +18,7 @@ namespace FurnitureShop.Helper
             CreateMap<Branch, BranchModel>().ReverseMap();
             CreateMap<Customer, CustomerModel>().ReverseMap();
 
+            CreateMap<Contact, ContactModel>().ReverseMap();
         }
     }
 }

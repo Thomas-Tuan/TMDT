@@ -25,7 +25,7 @@ namespace FurnitureShop.Controllers
         }
         [HttpGet, AllowAnonymous]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAllProducts()
+        public async Task<IActionResult> GetAllProduct()
         {
             try
             {

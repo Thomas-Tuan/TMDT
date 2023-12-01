@@ -19,7 +19,7 @@ namespace FurnitureShop.Controllers
         }
         [HttpGet,AllowAnonymous]
         [Route("GetList")]
-        public async Task<IActionResult> GetAllCategorys()
+        public async Task<IActionResult> GetAllCategory()
         {
             try
             {

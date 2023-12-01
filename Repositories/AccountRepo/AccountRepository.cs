@@ -109,6 +109,7 @@ namespace FurnitureShop.Repositories.Account
                 Email = model.Email,
                 UserName = model.Name,
                 SecurityStamp = Guid.NewGuid().ToString(),
+                CreatedDate = DateTime.Now,
             };
 
             if (!await roleManager.RoleExistsAsync(UserRoles.User))
@@ -131,26 +132,29 @@ namespace FurnitureShop.Repositories.Account
 
             if (result.Succeeded)
             {
-                var userId = user.Id;
-                var newCustomerModel = new CustomerModel
+                if (model.Role == UserRoles.User)
                 {
-                    customerId = userId,
-                    Name = model.Name,
-                    Email = model.Email,
-                };
-                var newCustomer = _mapper.Map<Customer>(newCustomerModel);
-                _context.Customers!.Add(newCustomer);
-                await _context.SaveChangesAsync();
-
+                    var userId = user.Id;
+                    var newCustomerModel = new CustomerModel
+                    {
+                        customerId = userId,
+                        Name = model.cusName,
+                        Email = model.Email,
+                        Phone = model.Phone,
+                    };
+                    var newCustomer = _mapper.Map<Customer>(newCustomerModel);
+                    _context.Customers!.Add(newCustomer);
+                    await _context.SaveChangesAsync();
+                }
                 return new Respone
                 {
-                    Message = "User have created !",
+                    Message = "Tạo mới tài khoản thành công !",
                     Status = 201,
                 };
             }
             return new Respone
             {
-                Message = "Error in create user !",
+                Message = "Lỗi khi tạo mới tài khoản !",
                 Status = 417,
             };
         }

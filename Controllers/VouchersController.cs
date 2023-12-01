@@ -17,7 +17,7 @@ namespace FurnitureShop.Controllers
             _voucherRepo = repo;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllVouchers()
+        public async Task<IActionResult> GetAllVoucher()
         {
             try
             {

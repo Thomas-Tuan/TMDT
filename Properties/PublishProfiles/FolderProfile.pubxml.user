@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\General\TMDT\Published\FurnitureWebApi</_PublishTargetUrl>
+    <History>True|2023-11-29T09:36:10.5654625Z;True|2023-11-29T16:34:49.2264581+07:00;True|2023-11-29T16:30:34.8608816+07:00;True|2023-11-29T16:26:34.1108788+07:00;True|2023-11-29T16:22:30.7825787+07:00;True|2023-11-29T01:51:34.9131757+07:00;True|2023-11-29T01:22:07.6920958+07:00;False|2023-11-29T01:21:34.4895910+07:00;True|2023-11-29T01:15:38.1524466+07:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

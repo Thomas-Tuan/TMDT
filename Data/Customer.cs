@@ -9,6 +9,7 @@ namespace FurnitureShop.Data
         [ForeignKey("User")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string? customerId { get; set; }
+        public DateTime CreatedDate { get; set; }
         public string? Image { get; set; }
         public string? Name { get; set; }
 

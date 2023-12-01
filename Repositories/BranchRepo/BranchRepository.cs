@@ -36,7 +36,7 @@ namespace FurnitureShop.Repositories.BranchRepo
 
         public async Task<List<BranchModel>> GetAllBranchAsync()
         {
-            var Branches = await _context.Branches!.OrderByDescending(c => c.Id).ToListAsync();
+            var Branches = await _context.Branches!.OrderByDescending(c=>c.Id).ToListAsync();
             return _mapper.Map<List<BranchModel>>(Branches);
         }
 

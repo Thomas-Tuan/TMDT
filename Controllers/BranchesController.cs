@@ -21,15 +21,21 @@ namespace FurnitureShop.Controllers
         }
         [HttpGet,AllowAnonymous]
         [Route("GetList")]
-        public async Task<IActionResult> GetAllBranchs()
+        public async Task<IActionResult> GetAllBranches()
         {
             try
             {
                 return Ok(await _BranchRepo.GetAllBranchAsync());
             }
-            catch
+            catch(Exception ex)
             {
                 return BadRequest();
+                //var errorResponse = new
+                //{
+                //    Message = "An unexpected error occurred.",
+                //    ErrorDetails = ex.Message // Include specific exception details if needed
+                //};
+                //return StatusCode(500, errorResponse);
             }
         }
         [HttpGet]

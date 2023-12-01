@@ -1,8 +1,12 @@
+using CodeMegaPayPal.Services;
 using FurnitureShop.Data;
+using FurnitureShop.Helper;
 using FurnitureShop.Helper.Service;
 using FurnitureShop.Repositories.Account;
 using FurnitureShop.Repositories.BranchRepo;
 using FurnitureShop.Repositories.CategoryRepo;
+using FurnitureShop.Repositories.ContactRepo;
+using FurnitureShop.Repositories.CustomerRepo;
 using FurnitureShop.Repositories.OrderRepo;
 using FurnitureShop.Repositories.ProductRepo;
 using FurnitureShop.Repositories.UserRepo;
@@ -33,6 +37,7 @@ policy.WithOrigins("*")
 .AllowAnyOrigin()
 ));
 
+
 //Configure Password
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -59,11 +64,18 @@ builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 
+builder.Services.AddScoped<IPayPalService, PayPalService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ICustomerResponsitory, CustomerResponsitory>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
+
 builder.Services.AddScoped<IUserResponsitory, UserResponsitory>();
 builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
+//Add EmailSender
+builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailSettings"));
 
 //Add Authorize
 builder.Services.AddSwaggerGen(options =>
@@ -101,11 +113,14 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

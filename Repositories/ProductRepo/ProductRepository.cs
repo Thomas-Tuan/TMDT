@@ -38,7 +38,7 @@ namespace FurnitureShop.Repositories.ProductRepo
 
         public async Task<List<ProductModel>> GetAllProductAsync()
         {
-            var products = await _context.Products!.ToListAsync();
+            var products = await _context.Products!.OrderByDescending(c => c.Id).ToListAsync();
             return _mapper.Map<List<ProductModel>>(products);
         }
 

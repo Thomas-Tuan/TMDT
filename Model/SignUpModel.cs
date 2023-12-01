@@ -11,5 +11,8 @@ namespace FurnitureShop.Model
         public string confirmPass { get; set; } = null!;
         public string Role { get; set; } = null!;
 
+        public string cusName { get; set; } = null!;
+        public string Phone { get; set; } = null!;
+
     }
 }

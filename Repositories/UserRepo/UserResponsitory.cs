@@ -52,6 +52,7 @@ namespace FurnitureShop.Repositories.UserRepo
                 UserName = model.UserName,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 isLock = model.isLock,
+                CreatedDate = DateTime.Now,
             };
             if (!await roleManager.RoleExistsAsync(UserRoles.User))
             {
@@ -79,6 +80,7 @@ namespace FurnitureShop.Repositories.UserRepo
                         customerId = userId,
                         Name = model.UserName,
                         Email = model.Email,
+                        CreatedDate = DateTime.Now,
                     };
                     var newCustomer = _mapper.Map<Customer>(newCustomerModel);
                     _context.Customers!.Add(newCustomer);
@@ -87,13 +89,13 @@ namespace FurnitureShop.Repositories.UserRepo
 
                 return new Respone
                 {
-                    Message = "User have created !",
+                    Message = "Tạo mới tài khoản thành công !",
                     Status = 201,
                 };
             }
             return new Respone
             {
-                Message = "Error in create user !",
+                Message = "Lỗi khi tạo mới tài khoản !",
                 Status = 417,
             };
         }
@@ -122,7 +124,7 @@ namespace FurnitureShop.Repositories.UserRepo
 
         public async Task<List<UserModel>> GetAllUserAsync()
         {
-            var users = await userManager.Users.ToListAsync();
+            var users = await userManager.Users.OrderByDescending(u => u.CreatedDate).ToListAsync();
             var userModels = _mapper.Map<List<UserModel>>(users);
             foreach (var userModel in userModels)
             {
@@ -174,13 +176,13 @@ namespace FurnitureShop.Repositories.UserRepo
             {
                 return new Respone
                 {
-                    Message = "User have updated !",
+                    Message = "Cập nhật tài khoản thành công !",
                     Status = 204,
                 };
             }
             return new Respone
             {
-                Message = "Error in update user !",
+                Message = "Lỗi khi cập nhật tài khoản !",
                 Status = 417,
             };
         }
