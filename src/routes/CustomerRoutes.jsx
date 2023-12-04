@@ -25,6 +25,7 @@ import UserRequireAuth from "../pages/UserRequireAuth";
 import theme, { Colors } from "../styles/theme";
 import UserOrderDetail from "../pages/AccountInfo/UserOrderDetail";
 import ResetPass from "../pages/AccountInfo/ResetPass";
+import CheckoutPage from "../pages/CheckoutPage";
 
 const CustomerRoutes = () => {
     return (
@@ -59,6 +60,7 @@ const CustomerRoutes = () => {
                             <Route path="/confirmOTP" element={<ConfirmOtp />} />
                             <Route path="/confirmPass" element={<ChangePassword />} />
                             <Route path="/cart" element={<Cart />} />
+                            <Route path="/checkout" element={<CheckoutPage />} />
                             <Route element={<UserRequireAuth />} >
                                 <Route path="/customer" element={<UserMainLayout />} >
                                     <Route path="info" element={<AccountPage />} />

@@ -10,6 +10,7 @@ import useProducts from './useProducts';
 import useUsers from './useUsers';
 import useOrders from './useOrder';
 import useContacts from './useContact';
+import useVoucher from './useVoucher';
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -23,7 +24,9 @@ export default function useDeleteForm(props) {
 
     const { handleDeleteContact } = useContacts();
     const { handleDeleteOrder } = useOrders();
+    const { handleDeleteVoucher } = useVoucher();
     const { handleDeleteUser } = useUsers();
+
     const MyDialog = () => {
         return (
             <Dialog
@@ -88,17 +91,28 @@ export default function useDeleteForm(props) {
                                             <Button variant='contained' onClick={handleClose}>Hủy bỏ</Button>
                                         </DialogActions>
                                     </>
-                                    :
-                                    <>
-                                        <DialogTitle>{`Xóa đơn hàng có mã ${props.newValue.Id} khỏi danh sách đơn đặt hàng ?`}</DialogTitle>
-                                        <DialogActions >
-                                            <Button variant='contained' onClick={() => {
-                                                handleDeleteOrder(props.newValue.Id)
-                                            }}>Đồng ý
-                                            </Button>
-                                            <Button variant='contained' onClick={handleClose}>Hủy bỏ</Button>
-                                        </DialogActions>
-                                    </>
+                                    : props.newValue.Code ?
+                                        <>
+                                            <DialogTitle>{`Xóa mã khuyến mãi ${props.newValue.Code} khỏi danh sách đơn khuyến mãi ?`}</DialogTitle>
+                                            <DialogActions >
+                                                <Button variant='contained' onClick={() => {
+                                                    handleDeleteVoucher(props.newValue.Id)
+                                                }}>Đồng ý
+                                                </Button>
+                                                <Button variant='contained' onClick={handleClose}>Hủy bỏ</Button>
+                                            </DialogActions>
+                                        </>
+                                        :
+                                        <>
+                                            <DialogTitle>{`Xóa đơn hàng có mã ${props.newValue.Id} khỏi danh sách đơn đặt hàng ?`}</DialogTitle>
+                                            <DialogActions >
+                                                <Button variant='contained' onClick={() => {
+                                                    handleDeleteOrder(props.newValue.Id)
+                                                }}>Đồng ý
+                                                </Button>
+                                                <Button variant='contained' onClick={handleClose}>Hủy bỏ</Button>
+                                            </DialogActions>
+                                        </>
                 }
             </Dialog >
         );

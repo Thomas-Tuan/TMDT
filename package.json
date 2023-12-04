@@ -6,11 +6,13 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^40.0.0",
     "@ckeditor/ckeditor5-react": "^6.1.0",
+    "@date-io/date-fns": "^2.17.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.14.12",
     "@mui/material": "^5.14.12",
+    "@mui/x-date-pickers": "^6.18.2",
     "@reduxjs/toolkit": "^1.9.7",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

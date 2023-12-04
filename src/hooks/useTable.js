@@ -83,7 +83,6 @@ const useTable = (props) => {
             .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
     }
 
-
     const handleSortChange = (id) => {
         const isAsc = orderBy === id && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
@@ -198,6 +197,18 @@ const useTable = (props) => {
         });
     }
 
+    const handleSearchVoucherChange = (e) => {
+        setSearchTerm({
+            searchFunc: items => {
+                if (e.target.value === "")
+                    return items;
+                else
+                    return items.filter((item) => item.code.toLowerCase().includes(e.target.value.toLowerCase()))
+
+            }
+        });
+    }
+
     return {
         page,
         setPage,
@@ -220,6 +231,7 @@ const useTable = (props) => {
         handleSearchCateChange,
         handleSearchProductChange,
         handleSearchCustomerChange,
+        handleSearchVoucherChange,
         handleSearchUserChange,
         handleSearchContactChange,
         handleSearchOrderChange,

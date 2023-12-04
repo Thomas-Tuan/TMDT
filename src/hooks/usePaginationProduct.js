@@ -15,7 +15,6 @@ const usePaginationProducts = (page) => {
         try {
             const params = {
                 page: page,
-                size: 10,
             };
             const response = await productApi.getListPagination(params);
             setIsLoading(false);

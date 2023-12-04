@@ -1,5 +1,5 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Button, IconButton, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
+import { Button, IconButton, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -93,8 +93,8 @@ const SignInForm = ({ onSwitchMode }) => {
                 <Stack spacing={4}>
                   <Stack spacing={2}>
                     <Stack spacing={1}>
-                      <InputLabel >Tên tài khoản</InputLabel>
                       <Field
+                        label="Tên tài khoản"
                         fullWidth
                         value={values.Name}
                         onChange={handleChange}
@@ -107,8 +107,8 @@ const SignInForm = ({ onSwitchMode }) => {
                       </Typography>
                     </Stack>
                     <Stack spacing={1}>
-                      <InputLabel >Mật khẩu</InputLabel>
                       <Field
+                        label="Mật khẩu"
                         fullWidth
                         type={showHiddenPass ? "password" : "text"}
                         value={values.Password}

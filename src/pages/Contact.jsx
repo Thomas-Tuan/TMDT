@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, InputLabel, TextField, Typography } from '@mui/material'
+import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React from 'react'
 import Iframe from 'react-iframe'
@@ -75,8 +75,8 @@ const Contact = () => {
                                     <Form>
                                         <Grid container spacing={2}>
                                             <Grid item xs={12} md={6}  >
-                                                <InputLabel >Họ tên</InputLabel>
                                                 <Field
+                                                    label="Họ tên"
                                                     fullWidth
                                                     value={values.Name}
                                                     onChange={handleChange}
@@ -89,8 +89,8 @@ const Contact = () => {
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12} md={6}  >
-                                                <InputLabel >Email</InputLabel>
                                                 <Field
+                                                    label="Email"
                                                     fullWidth
                                                     value={values.Email}
                                                     onChange={handleChange}
@@ -103,8 +103,8 @@ const Contact = () => {
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12} md={6}  >
-                                                <InputLabel >Số điện thoại</InputLabel>
                                                 <Field
+                                                    label="Số điện thoại"
                                                     fullWidth
                                                     value={values.Phone}
                                                     onChange={handleChange}
@@ -117,8 +117,8 @@ const Contact = () => {
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12} md={6}  >
-                                                <InputLabel >Tiêu đề</InputLabel>
                                                 <Field
+                                                    label="Tiêu đề"
                                                     fullWidth
                                                     value={values.Title}
                                                     onChange={handleChange}
@@ -131,8 +131,8 @@ const Contact = () => {
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12} md={12}  >
-                                                <InputLabel >Nội dung</InputLabel>
                                                 <Field
+                                                    label="Nội dung"
                                                     fullWidth
                                                     name="Description"
                                                     as={TextField}

@@ -10,6 +10,7 @@ import { updateQuantity } from '../../Redux/Cart/CartSlice';
 import productApi from '../../api/productApi';
 import MyBreadcrumb from '../../components/common/MyBreadcrumb';
 import branchApi from '../../api/branchApi';
+import ReviewProduct from './ReviewProduct';
 
 
 const UserProductDetail = () => {
@@ -21,8 +22,9 @@ const UserProductDetail = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [mainImage, setMainImage] = useState('');
-
     const [itemCount, setItemCount] = useState(1);
+
+    const [dataFetched, setDataFetched] = useState(false);
 
     const handleChange = (image) => {
         setMainImage(image);
@@ -49,11 +51,13 @@ const UserProductDetail = () => {
     }
 
     useEffect(() => {
+        fetchBranchList();
         if (id !== undefined) {
             const getProductById = async (id) => {
                 try {
                     const response = await productApi.get(id);
                     setProductDetail(response);
+                    setDataFetched(true);
                     if (branches.length > 0 && productDetail.branchId !== undefined) {
                         const matchingItem = branches.find(item => item.id === productDetail.branchId);
                         setMatchBranch(matchingItem);
@@ -75,11 +79,7 @@ const UserProductDetail = () => {
             }
             getProductById(id);
         }
-    }, [id, branches, productDetail.branchId, navigate]);
-
-    useEffect(() => {
-        fetchBranchList();
-    }, [])
+    }, []);
 
     const fetchBranchList = async () => {
         try {
@@ -94,7 +94,7 @@ const UserProductDetail = () => {
         <>
             <MyBreadcrumb />
             <Container maxWidth="lg" sx={{ mt: 2 }}>
-                <Grid spacing={1} container >
+                <Grid spacing={3} container >
                     <Grid item xs={12} md={1.25} >
                         <Stack
                             direction={{ xs: "row", md: "column" }}
@@ -228,20 +228,10 @@ const UserProductDetail = () => {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={12}>
-                        <Paper sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: 1,
-                        }}>
-                            <Typography textAlign="center" variant="subtitle1">
-                                Đánh giá sản phẩm
-                            </Typography>
-                            <Typography variant="subtitle1">
-                                New
-                            </Typography>
-                        </Paper>
-                    </Grid>
+                    {
+                        dataFetched &&
+                        <ReviewProduct productInfo={productDetail} />
+                    }
                 </Grid>
             </Container>
         </>

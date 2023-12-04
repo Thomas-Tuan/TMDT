@@ -1,5 +1,5 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Button, IconButton, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
+import { Button, IconButton, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -103,9 +103,9 @@ const SignUpForm = ({ onSwitchMode }) => {
                 <Stack spacing={4}>
                   <Stack spacing={2}>
                     <Stack spacing={1}>
-                      <InputLabel >Tên tài khoản</InputLabel>
                       <Field
                         fullWidth
+                        label="Tên tài khoản"
                         value={values.Name}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -117,9 +117,9 @@ const SignUpForm = ({ onSwitchMode }) => {
                       </Typography>
                     </Stack>
                     <Stack spacing={1}>
-                      <InputLabel >Tên khách hàng</InputLabel>
                       <Field
                         fullWidth
+                        label="Tên khách hàng"
                         value={values.cusName}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -131,9 +131,9 @@ const SignUpForm = ({ onSwitchMode }) => {
                       </Typography>
                     </Stack>
                     <Stack spacing={1}>
-                      <InputLabel >Số điện thoại</InputLabel>
                       <Field
                         fullWidth
+                        label="Số điện thoại"
                         value={values.Phone}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -145,9 +145,9 @@ const SignUpForm = ({ onSwitchMode }) => {
                       </Typography>
                     </Stack>
                     <Stack spacing={1}>
-                      <InputLabel >Email</InputLabel>
                       <Field
                         fullWidth
+                        label="Email"
                         value={values.Email}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -159,9 +159,9 @@ const SignUpForm = ({ onSwitchMode }) => {
                       </Typography>
                     </Stack>
                     <Stack spacing={1}>
-                      <InputLabel >Mật khẩu</InputLabel>
                       <Field
                         fullWidth
+                        label="Mật khẩu"
                         type={showHiddenPass ? 'text' : 'password'}
                         value={values.Password}
                         onChange={handleChange}
@@ -187,8 +187,8 @@ const SignUpForm = ({ onSwitchMode }) => {
                       </Typography>
                     </Stack>
                     <Stack spacing={1}>
-                      <InputLabel >Xác nhận mật khẩu</InputLabel>
                       <Field
+                        label="Xác nhận mật khẩu"
                         fullWidth
                         type={showHiddenConfirmPass ? 'text' : 'password'}
                         value={values.confirmPass}

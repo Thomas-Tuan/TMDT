@@ -53,7 +53,6 @@ const UserProductList = () => {
         }
     }
 
-
     useEffect(() => {
         if (!isLoading && dataFetched) {
             const filterProducts = (selectedCategory, selectedBranch, query, minPrice, maxPrice, sortOption) => {

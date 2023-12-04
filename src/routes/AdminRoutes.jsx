@@ -4,6 +4,8 @@ import RequireAuth from "../admin/components/common/RequireAuth";
 import MainLayout from "../admin/components/layout/MainLayout/MainLayout";
 import BranchList from "../admin/pages/Branches/BranchList";
 import CategoriesList from "../admin/pages/Categories/CategoriesList";
+import ContactDetail from "../admin/pages/Contacts/ContactDetail";
+import ContactList from "../admin/pages/Contacts/ContactsList";
 import CustomerList from "../admin/pages/Customer/CustomerList";
 import EditCustomer from "../admin/pages/Customer/EditCustomer";
 import DashboardPage from "../admin/pages/Dashboard/DashboardPage";
@@ -16,8 +18,8 @@ import AddEditUser from "../admin/pages/Users/AddEditUser";
 import UsersList from "../admin/pages/Users/UserList";
 import { AuthProvider } from "../context/auth";
 import NotFound from "../pages/NotFound";
-import ContactDetail from "../admin/pages/Contacts/ContactDetail";
-import ContactList from "../admin/pages/Contacts/ContactsList";
+import AddEditVoucher from "../admin/pages/Vouchers/AddEditVoucher";
+import VouchersList from "../admin/pages/Vouchers/VoucherList";
 
 const AdminRoutes = () => {
     return (
@@ -56,6 +58,11 @@ const AdminRoutes = () => {
                             <Route index element={<ProductsList />} />
                             <Route path="create" element={<AddEditProduct />} />
                             <Route path="edit/:id" element={<AddEditProduct />} />
+                        </Route>
+                        <Route path="/voucher" element={<MainLayout />}>
+                            <Route index element={<VouchersList />} />
+                            <Route path="create" element={<AddEditVoucher />} />
+                            <Route path="edit/:id" element={<AddEditVoucher />} />
                         </Route>
                         <Route path="/order" element={<MainLayout />}>
                             <Route index element={<OrdersList />} />

@@ -113,7 +113,7 @@ const AddEditProduct = () => {
                         ckEditorRef.current.editorInstance.setData(updatedInitialValues.Description);
                     }
                 } catch (error) {
-                    console.error('Lỗi không được lấy dữ liệu sản phẩm:', error);
+                    console.error('Lỗi không lấy được dữ liệu sản phẩm:', error);
                 }
             }
             getProductById(id);
@@ -218,7 +218,6 @@ const AddEditProduct = () => {
                 onSubmit={handleSubmit} >
                 {({ values, handleChange, handleBlur, setFieldValue }) => {
                     return (
-
                         <Form>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} md={6} sm={12}  >
@@ -352,8 +351,6 @@ const AddEditProduct = () => {
                                         />
                                     </Grid>
                                 </Grid>
-
-
                             </Grid>
                         </Form>
                     )
