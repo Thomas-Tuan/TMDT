@@ -19,6 +19,7 @@ namespace FurnitureShop.Helper
             CreateMap<Customer, CustomerModel>().ReverseMap();
 
             CreateMap<Contact, ContactModel>().ReverseMap();
+            CreateMap<Review, ReviewModel>().ReverseMap();
         }
     }
 }

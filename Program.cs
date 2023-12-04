@@ -9,6 +9,7 @@ using FurnitureShop.Repositories.ContactRepo;
 using FurnitureShop.Repositories.CustomerRepo;
 using FurnitureShop.Repositories.OrderRepo;
 using FurnitureShop.Repositories.ProductRepo;
+using FurnitureShop.Repositories.ReviewRepo;
 using FurnitureShop.Repositories.UserRepo;
 using FurnitureShop.Repositories.VoucherRepo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -73,6 +74,8 @@ builder.Services.AddScoped<IUserResponsitory, UserResponsitory>();
 builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 //Add EmailSender
 builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailSettings"));

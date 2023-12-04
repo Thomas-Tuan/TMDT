@@ -212,21 +212,16 @@ namespace FurnitureShop.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,0)");
 
-                    b.Property<int?>("VouchersId")
-                        .HasColumnType("int");
-
                     b.Property<string>("cusName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("customerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("voucherId")
+                    b.Property<string>("voucherCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("VouchersId");
 
                     b.HasIndex("customerId");
 
@@ -276,11 +271,14 @@ namespace FurnitureShop.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("AverageRating")
+                        .HasColumnType("decimal(18,0)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("Discount")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("Discount")
+                        .HasColumnType("decimal(18,0)");
 
                     b.Property<string>("Image2")
                         .HasColumnType("nvarchar(max)");
@@ -295,6 +293,9 @@ namespace FurnitureShop.Migrations
                         .HasColumnType("decimal(18,0)");
 
                     b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReviewCount")
                         .HasColumnType("int");
 
                     b.Property<int?>("branchId")
@@ -359,19 +360,26 @@ namespace FurnitureShop.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Discount")
-                        .HasColumnType("float");
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("amountDiscount")
+                        .HasColumnType("decimal(18,0)");
 
-                    b.Property<DateTime>("endDate")
+                    b.Property<int>("discountType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("endDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("startDate")
-                        .HasColumnType("datetime2");
+                    b.Property<decimal>("percentageDiscount")
+                        .HasColumnType("decimal(18,0)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique()
+                        .HasFilter("[OrderId] IS NOT NULL");
 
                     b.ToTable("Vouchers");
                 });
@@ -522,17 +530,11 @@ namespace FurnitureShop.Migrations
 
             modelBuilder.Entity("FurnitureShop.Data.Order", b =>
                 {
-                    b.HasOne("FurnitureShop.Data.Voucher", "Vouchers")
-                        .WithMany("Orders")
-                        .HasForeignKey("VouchersId");
-
                     b.HasOne("FurnitureShop.Data.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("customerId");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Vouchers");
                 });
 
             modelBuilder.Entity("FurnitureShop.Data.OrderDetail", b =>
@@ -579,6 +581,15 @@ namespace FurnitureShop.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("FurnitureShop.Data.Voucher", b =>
+                {
+                    b.HasOne("FurnitureShop.Data.Order", "Order")
+                        .WithOne("Voucher")
+                        .HasForeignKey("FurnitureShop.Data.Voucher", "OrderId");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -655,6 +666,8 @@ namespace FurnitureShop.Migrations
             modelBuilder.Entity("FurnitureShop.Data.Order", b =>
                 {
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("Voucher");
                 });
 
             modelBuilder.Entity("FurnitureShop.Data.Product", b =>
@@ -662,11 +675,6 @@ namespace FurnitureShop.Migrations
                     b.Navigation("OrderDetail");
 
                     b.Navigation("ReviewPros");
-                });
-
-            modelBuilder.Entity("FurnitureShop.Data.Voucher", b =>
-                {
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

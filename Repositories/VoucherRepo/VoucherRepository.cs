@@ -24,6 +24,39 @@ namespace FurnitureShop.Repositories.VoucherRepo
             return newVoucher.Id!;
         }
 
+        public async Task<ApplyVoucherModel> ApplyVoucherAsync(ApplyVoucherModel model)
+        {
+            var checkVoucher =await _context.Vouchers!.FirstOrDefaultAsync(b => b.Code == model.Code!.Trim());
+            if (checkVoucher != null)
+            {
+                if ((int)checkVoucher.discountType == 1)
+                {
+                    double discountAmount = (checkVoucher.percentageDiscount / 100) * model.PriceAmount;
+                    double finalAmount = model.PriceAmount - discountAmount;
+                    return new ApplyVoucherModel
+                    {
+                        Code = checkVoucher.Code,
+                        PriceAmount = finalAmount,
+                        isUsed = true,
+                    };
+                }
+                else
+                {
+                    double finalAmount = model.PriceAmount - checkVoucher.amountDiscount;
+                    return new ApplyVoucherModel
+                    {
+                        Code = checkVoucher.Code,
+                        PriceAmount = finalAmount,
+                        isUsed = true,
+                    };
+                }
+            }
+            return new ApplyVoucherModel
+            {
+                Code = null,
+            };
+        }
+
         public async Task DeleteVoucherAsync(int id)
         {
             var deleteVoucher = _context.Vouchers!.SingleOrDefault(b => b.Id == id);
@@ -36,7 +69,7 @@ namespace FurnitureShop.Repositories.VoucherRepo
 
         public async Task<List<VoucherModel>> GetAllVoucherAsync()
         {
-            var Vouchers = await _context.Vouchers!.ToListAsync();
+            var Vouchers = await _context.Vouchers!.OrderByDescending(c => c.Id).ToListAsync();
             return _mapper.Map<List<VoucherModel>>(Vouchers);
         }
 

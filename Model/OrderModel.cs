@@ -20,6 +20,7 @@ namespace FurnitureShop.Model
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public int Gender { get; set; }
+        public string? voucherCode {  get; set; }
 
         [NotMapped]
         public List<ProductModel>? Products { get; set; }

@@ -17,6 +17,7 @@ namespace FurnitureShop.Data
         public string? imgMain { get; set; }
         public string? Image2 { get; set; }
         public string? Image3 { get; set; }
+        [Column(TypeName = "decimal(18,0)")]
         public double? Discount { get; set; }
 
         public int? categoryId { get; set; }
@@ -25,6 +26,9 @@ namespace FurnitureShop.Data
         public int? branchId { get; set; }
         public Branch? Branch { get; set; }
 
+        public int ReviewCount { get; set; }
+        [Column(TypeName = "decimal(18,0)")]
+        public double AverageRating { get; set; }
         public ICollection<Review>? ReviewPros { get; set; }
         public ICollection<OrderDetail>? OrderDetail { get; set; }
     }

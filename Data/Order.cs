@@ -29,8 +29,8 @@ namespace FurnitureShop.Data
         public string? Phone { get; set; }
         public int Gender { get; set; }
 
-        public string? voucherId { get; set; }
-        public Voucher? Vouchers { get; set; }
+        public string? voucherCode {  get; set; }
+        public Voucher? Voucher { get; set; }
 
         public ICollection<OrderDetail>? OrderDetails { get; set; }
         public Order()

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureShop.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class VouchersController : ControllerBase
@@ -17,6 +18,7 @@ namespace FurnitureShop.Controllers
             _voucherRepo = repo;
         }
         [HttpGet]
+        [Route("GetList")]
         public async Task<IActionResult> GetAllVoucher()
         {
             try
@@ -28,13 +30,15 @@ namespace FurnitureShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("GetById/{id}")]
         public async Task<IActionResult> GetVoucherById(int id)
         {
             var Voucher = await _voucherRepo.GetVoucherAsync(id);
             return Voucher == null ? NotFound() : Ok(Voucher);
         }
         [HttpPost]
+        [Route("AddNew")]
         public async Task<IActionResult> AddNewVoucher(VoucherModel model)
         {
             try
@@ -48,7 +52,8 @@ namespace FurnitureShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("Update/{id}")]
         public async Task<IActionResult> UpdateVoucher(int id, [FromBody] VoucherModel model)
         {
             if (id != model.Id)
@@ -58,11 +63,24 @@ namespace FurnitureShop.Controllers
             await _voucherRepo.UpdateVoucherAsync(id, model);
             return Ok();
         }
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("Delete/{id}")]
         public async Task<IActionResult> DeleteVoucher([FromRoute] int id)
         {
             await _voucherRepo.DeleteVoucherAsync(id);
             return Ok();
+        }
+        [HttpPost, AllowAnonymous]
+        [Route("ApplyVoucher")]
+        public async Task<IActionResult> ApplyVoucher(ApplyVoucherModel model)
+        {
+            var result = await _voucherRepo.ApplyVoucherAsync(model);
+            if (result.Code != null)
+            {
+                return Ok(result);
+            }
+            var errorMessage = new { ErrorMessage = "Mã khuyến mãi bị sai !!" };
+            return BadRequest(errorMessage);
         }
     }
 }

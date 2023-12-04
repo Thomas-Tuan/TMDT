@@ -16,6 +16,7 @@ namespace FurnitureShop.Model
         public string? imgMain { get; set; }
         public string? Image2 { get; set; }
         public string? Image3 { get; set; }
+        public double? Discount { get; set; }
 
         [NotMapped]
         public int totalRequestQuantity { get; set; }
