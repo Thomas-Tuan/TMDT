@@ -1,5 +1,7 @@
 ﻿using FurnitureShop.Model;
 using FurnitureShop.Repositories.Account;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureShop.Controllers
@@ -40,6 +42,12 @@ namespace FurnitureShop.Controllers
                 var errorObject = new { ErrorMessage = "Người dùng hoặc mật khẩu bị sai !!" };
                 return BadRequest(errorObject);
             }
+            return Ok(result);
+        }
+        [HttpPost("SignInGoogle")]
+        public async Task<IActionResult> SignInGoogle([FromBody] SignInOptModel model)
+        {
+            var result = await accountRepo.SignInOptAsync(model);
             return Ok(result);
         }
     }

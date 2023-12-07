@@ -21,7 +21,5 @@ namespace FurnitureShop.Data
         public DiscountType discountType { get; set; }
         public DateTime? endDate { get; set; }
 
-        public string? OrderId { get; set; }
-        public Order? Order { get; set; }
     }
 }

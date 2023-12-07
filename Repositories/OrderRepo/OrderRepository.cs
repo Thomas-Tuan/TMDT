@@ -53,7 +53,7 @@ namespace FurnitureShop.Repositories.OrderRepo
                     _context.Orders!.Remove(deleteOrder);
                     await _context.SaveChangesAsync();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw;
                 }
@@ -90,7 +90,7 @@ namespace FurnitureShop.Repositories.OrderRepo
 
         public async Task<List<OrderModel>> GetUserOrderAsync(string id)
         {
-            var Order = await _context.Orders!.Where(i=>i.customerId!.Contains(id)).OrderByDescending(c => c.Date).ToListAsync();
+            var Order = await _context.Orders!.Where(i => i.customerId!.Contains(id)).OrderByDescending(c => c.Date).ToListAsync();
             return _mapper.Map<List<OrderModel>>(Order);
         }
 

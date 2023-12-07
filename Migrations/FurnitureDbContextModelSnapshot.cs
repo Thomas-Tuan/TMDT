@@ -360,9 +360,6 @@ namespace FurnitureShop.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OrderId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<decimal>("amountDiscount")
                         .HasColumnType("decimal(18,0)");
 
@@ -376,10 +373,6 @@ namespace FurnitureShop.Migrations
                         .HasColumnType("decimal(18,0)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderId")
-                        .IsUnique()
-                        .HasFilter("[OrderId] IS NOT NULL");
 
                     b.ToTable("Vouchers");
                 });
@@ -583,15 +576,6 @@ namespace FurnitureShop.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("FurnitureShop.Data.Voucher", b =>
-                {
-                    b.HasOne("FurnitureShop.Data.Order", "Order")
-                        .WithOne("Voucher")
-                        .HasForeignKey("FurnitureShop.Data.Voucher", "OrderId");
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -666,8 +650,6 @@ namespace FurnitureShop.Migrations
             modelBuilder.Entity("FurnitureShop.Data.Order", b =>
                 {
                     b.Navigation("OrderDetails");
-
-                    b.Navigation("Voucher");
                 });
 
             modelBuilder.Entity("FurnitureShop.Data.Product", b =>

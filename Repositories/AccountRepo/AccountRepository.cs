@@ -158,5 +158,74 @@ namespace FurnitureShop.Repositories.Account
                 Status = 417,
             };
         }
+
+        public async Task<JwtToken> SignInOptAsync(SignInOptModel model)
+        {
+            var userName = await userManager.FindByEmailAsync(model.Email);
+            if (userName == null)
+            {
+                var user = new ApplicationUser
+                {
+                    Email = model.Email,
+                    UserName = model.Email,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    CreatedDate = DateTime.Now,
+                };
+                await userManager.CreateAsync(user);
+                if (!await roleManager.RoleExistsAsync(UserRoles.User))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                }
+                await userManager.AddToRoleAsync(user, UserRoles.User);
+                var userId = user.Id;
+                var newCustomerModel = new CustomerModel
+                {
+                    customerId = userId,
+                    Name = model.Name,
+                    Email = model.Email,
+                };
+                var newCustomer = _mapper.Map<Customer>(newCustomerModel);
+                _context.Customers!.Add(newCustomer);
+                await _context.SaveChangesAsync();
+                var userRoles = await userManager.GetRolesAsync(user);
+                var authClaims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                };
+                foreach (var userRole in userRoles)
+                {
+                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                }
+                var token = GetToken(authClaims);
+                return new JwtToken
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    expiration = token.ValidTo.ToLocalTime(),
+                    name = user.UserName,
+                    customerId = userId,
+                    Roles = userRoles.ToList(),
+                };
+            }
+            var userRolesExist = await userManager.GetRolesAsync(userName);
+            var authClaimsExist = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Email, userName!.Email),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                };
+            foreach (var userRole in userRolesExist)
+            {
+                authClaimsExist.Add(new Claim(ClaimTypes.Role, userRole));
+            }
+            var tokenExist = GetToken(authClaimsExist);
+            return new JwtToken
+            {
+                token = new JwtSecurityTokenHandler().WriteToken(tokenExist),
+                expiration = tokenExist.ValidTo.ToLocalTime(),
+                name = userName.UserName,
+                customerId = userName.Id,
+                Roles = userRolesExist.ToList(),
+            };
+        }
     }
 }

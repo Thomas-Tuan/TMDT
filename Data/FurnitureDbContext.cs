@@ -48,10 +48,6 @@ namespace FurnitureShop.Data
                 .HasDefaultValueSql("('OR-' + FORMAT(GETDATE(), 'yyyyMMddHHmmss'))")
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Order>().HasOne(o => o.Voucher)
-                .WithOne(v => v.Order)
-                .HasForeignKey<Voucher>(v => v.OrderId);
-          
         }
     }
 }

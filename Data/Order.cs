@@ -30,7 +30,6 @@ namespace FurnitureShop.Data
         public int Gender { get; set; }
 
         public string? voucherCode {  get; set; }
-        public Voucher? Voucher { get; set; }
 
         public ICollection<OrderDetail>? OrderDetails { get; set; }
         public Order()

@@ -7,6 +7,6 @@ namespace FurnitureShop.Repositories.Account
     {
         public Task<Respone> SignUpAsync(SignUpModel model);
         public Task<JwtToken> SignInAsync(SignInModel model);
-
+        public Task<JwtToken> SignInOptAsync(SignInOptModel model);
     }
 }
