@@ -58,6 +58,7 @@ namespace FurnitureShop.Repositories.Account
                     name = user.UserName,
                     customerId = user.Id,
                     Roles = userRoles.ToList(),
+                    isLock = user.isLock,
                 };
             }
             return new JwtToken
@@ -141,6 +142,7 @@ namespace FurnitureShop.Repositories.Account
                         Name = model.cusName,
                         Email = model.Email,
                         Phone = model.Phone,
+                        CreatedDate = DateTime.Now,
                     };
                     var newCustomer = _mapper.Map<Customer>(newCustomerModel);
                     _context.Customers!.Add(newCustomer);

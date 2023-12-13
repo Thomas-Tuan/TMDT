@@ -30,6 +30,9 @@ namespace FurnitureShop.Data
         [Column(TypeName = "decimal(18,0)")]
         public double AverageRating { get; set; }
         public ICollection<Review>? ReviewPros { get; set; }
+
         public ICollection<OrderDetail>? OrderDetail { get; set; }
+
+        public virtual ICollection<FavoriteProduct> FavoriteProducts { get; set; }
     }
 }

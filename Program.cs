@@ -7,6 +7,7 @@ using FurnitureShop.Repositories.BranchRepo;
 using FurnitureShop.Repositories.CategoryRepo;
 using FurnitureShop.Repositories.ContactRepo;
 using FurnitureShop.Repositories.CustomerRepo;
+using FurnitureShop.Repositories.FavouriteRepo;
 using FurnitureShop.Repositories.OrderRepo;
 using FurnitureShop.Repositories.ProductRepo;
 using FurnitureShop.Repositories.ReviewRepo;
@@ -76,7 +77,7 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-
+builder.Services.AddScoped<IFavouriteProductRepository, FavouriteProductRepository>();
 //Add EmailSender
 builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailSettings"));
 

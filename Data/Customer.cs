@@ -20,5 +20,7 @@ namespace FurnitureShop.Data
 
         public virtual ICollection<Order>? Orders { get; set; }
         public ApplicationUser? User { get; set; }
+
+        public virtual ICollection<FavoriteProduct> FavoriteProducts { get; set; }
     }
 }

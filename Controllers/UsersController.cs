@@ -40,7 +40,7 @@ namespace FurnitureShop.Controllers
             }
         }
 
-        [HttpGet,AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         [Route("GetById/{id}")]
         public async Task<IActionResult> GetUserById(string id)
         {
@@ -71,7 +71,7 @@ namespace FurnitureShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut,AllowAnonymous]
+        [HttpPut, AllowAnonymous]
         [Route("Update/{id}")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserModel model)
         {
@@ -85,7 +85,7 @@ namespace FurnitureShop.Controllers
                 var successMessage = new { Message = "Cập nhật người dùng thành công !!" };
                 return Ok();
             }
-                    
+
             var errorMessage = new { ErrorMessage = "Tên tài khoản đã được xài !!" };
             return BadRequest(errorMessage);
         }

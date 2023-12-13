@@ -44,7 +44,7 @@ namespace FurnitureShop.Repositories.ProductRepo
 
         public async Task<PagedProductModel> GetProductPaginationAsync(int page)
         {
-            int pageSize = 10;
+            int pageSize = 8;
             var products = await _context.Products!.ToListAsync();
             var totalProducts = products.Count;
             double maxPrice = products.Max(product => product.Price);

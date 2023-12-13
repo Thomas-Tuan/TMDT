@@ -187,6 +187,21 @@ namespace FurnitureShop.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("FurnitureShop.Data.FavoriteProduct", b =>
+                {
+                    b.Property<int>("productId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("customerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("productId", "customerId");
+
+                    b.HasIndex("customerId");
+
+                    b.ToTable("FavoriteProducts");
+                });
+
             modelBuilder.Entity("FurnitureShop.Data.Order", b =>
                 {
                     b.Property<string>("Id")
@@ -521,6 +536,25 @@ namespace FurnitureShop.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FurnitureShop.Data.FavoriteProduct", b =>
+                {
+                    b.HasOne("FurnitureShop.Data.Customer", "Customer")
+                        .WithMany("FavoriteProducts")
+                        .HasForeignKey("customerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FurnitureShop.Data.Product", "Product")
+                        .WithMany("FavoriteProducts")
+                        .HasForeignKey("productId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("FurnitureShop.Data.Order", b =>
                 {
                     b.HasOne("FurnitureShop.Data.Customer", "Customer")
@@ -644,6 +678,8 @@ namespace FurnitureShop.Migrations
 
             modelBuilder.Entity("FurnitureShop.Data.Customer", b =>
                 {
+                    b.Navigation("FavoriteProducts");
+
                     b.Navigation("Orders");
                 });
 
@@ -654,6 +690,8 @@ namespace FurnitureShop.Migrations
 
             modelBuilder.Entity("FurnitureShop.Data.Product", b =>
                 {
+                    b.Navigation("FavoriteProducts");
+
                     b.Navigation("OrderDetail");
 
                     b.Navigation("ReviewPros");

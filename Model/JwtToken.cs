@@ -7,5 +7,6 @@
         public string? name { get; set; }
         public DateTime expiration { get; set; }
         public List<string>? Roles {  get; set; }
+        public bool isLock {  get; set; }
     }
 }

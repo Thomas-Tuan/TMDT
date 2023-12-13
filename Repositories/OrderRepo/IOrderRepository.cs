@@ -4,6 +4,7 @@ namespace FurnitureShop.Repositories.OrderRepo
 {
     public interface IOrderRepository
     {
+        public Task<AllStatisticsModel> GetAllStatistics();
         public Task<List<OrderModel>> GetUserOrderAsync(string id);
         public Task<List<OrderModel>> GetAllOrderAsync();
         public Task<OrderEditModel> GetOrderAsync(string id);

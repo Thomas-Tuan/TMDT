@@ -16,6 +16,21 @@ namespace FurnitureShop.Controllers
         {
             _orderRepo = repo;
         }
+
+        [HttpGet]
+        [Route("GetAllStatistics")]
+        public async Task<IActionResult> GetAllStatistics()
+        {
+            try
+            {
+                return Ok(await _orderRepo.GetAllStatistics());
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet]
         [Route("GetList")]
         public async Task<IActionResult> GetAllOrder()
@@ -34,7 +49,12 @@ namespace FurnitureShop.Controllers
         public async Task<IActionResult> GetOrderById(string id)
         {
             var Order = await _orderRepo.GetOrderAsync(id);
-            return Order == null ? NotFound() : Ok(Order);
+            if (Order.Id != null)
+            {
+                return Ok(Order);
+            }
+            var errorObject = new { ErrorMessage = "Không tìm thấy đơn hàng này !" };
+            return NotFound(errorObject);
         }
 
         [HttpPut, AllowAnonymous]
@@ -63,6 +83,11 @@ namespace FurnitureShop.Controllers
             try
             {
                 var newOrderId = await _orderRepo.AddOrderAsync(model);
+                if (newOrderId.Contains("Error")) 
+                {
+                    var errorObject = new { ErrorMessage = "Số lượng tồn kho không đủ !!" };
+                    return BadRequest(errorObject);
+                }
                 var Order = await _orderRepo.GetOrderAsync(newOrderId);
                 return Order == null ? NotFound() : Ok(Order);
             }

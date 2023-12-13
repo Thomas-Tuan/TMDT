@@ -20,6 +20,7 @@ namespace FurnitureShop.Data
         public DbSet<Review>? Reviews { get; set; }
         public DbSet<Customer>? Customers { get; set; }
         public DbSet<Contact>? Contacts { get; set; }
+        public DbSet<FavoriteProduct> FavoriteProducts { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,6 +48,19 @@ namespace FurnitureShop.Data
             modelBuilder.Entity<Order>().Property(o => o.Id)
                 .HasDefaultValueSql("('OR-' + FORMAT(GETDATE(), 'yyyyMMddHHmmss'))")
                 .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<FavoriteProduct>()
+                .HasKey(fp => new { fp.productId, fp.customerId });
+
+            modelBuilder.Entity<FavoriteProduct>()
+                      .HasOne(fp => fp.Customer)
+                      .WithMany(u => u.FavoriteProducts)
+                      .HasForeignKey(fp => fp.customerId);
+
+            modelBuilder.Entity<FavoriteProduct>()
+                .HasOne(fp => fp.Product)
+                .WithMany(p => p.FavoriteProducts)
+                .HasForeignKey(fp => fp.productId);
 
         }
     }
