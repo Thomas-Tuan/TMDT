@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import loginApi from '../../api/loginApi';
 import { ScreenMode } from '../../pages/LoginPage';
+import LoginRegisterOpt from './LoginRegisterOpt';
 
 const initialValues = {
   Email: '',
@@ -241,6 +242,7 @@ const SignUpForm = ({ onSwitchMode }) => {
                 </Button>
               </Stack>
             </Stack>
+            <LoginRegisterOpt />
           </Stack>
         )
       }

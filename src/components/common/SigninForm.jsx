@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import loginApi from '../../api/loginApi';
 import { ScreenMode } from '../../pages/LoginPage';
+import LoginRegisterOpt from './LoginRegisterOpt';
 
 const initialValues = {
   Name: '',
@@ -29,17 +30,31 @@ const SignInForm = ({ onSwitchMode }) => {
     try {
       const response = await loginApi.signIn(values)
       sessionStorage.setItem('userAccount', JSON.stringify(response));
-      toast.success("Đăng nhập thành công", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      navigate(from, { replace: true });
+      if (!response.isLock) {
+        toast.success("Đăng nhập thành công", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        navigate(from, { replace: true });
+      }
+      else {
+        toast.warning("Tài khoản đang bị khóa !!!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
     }
     catch (err) {
       if (err.response && err.response.data !== undefined) {
@@ -81,7 +96,8 @@ const SignInForm = ({ onSwitchMode }) => {
           >
             <Stack spacing={2} sx={{
               width: "100%",
-              maxWidth: "500px"
+              maxWidth: "500px",
+              mb: 1,
             }}>
               <Typography variant='h4' fontWeight="bold" textTransform="uppercase"
                 sx={{
@@ -160,6 +176,7 @@ const SignInForm = ({ onSwitchMode }) => {
                 </Button>
               </Stack>
             </Stack>
+            <LoginRegisterOpt />
           </Stack>
         )
       }

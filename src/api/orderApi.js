@@ -1,6 +1,10 @@
 import axiosFile from "./axiosFile";
 
 const orderApi = {
+    getAllStatistics(params) {
+        const url = '/Orders/GetAllStatistics';
+        return axiosFile.get(url, { params });
+    },
     getAll(params) {
         const url = '/Orders/GetList';
         return axiosFile.get(url, { params });

@@ -72,6 +72,9 @@ const UserOrderDetail = (props) => {
         }
     }, [id, navigate]);
 
+    const formatNumber = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
 
     return (
         <>
@@ -118,7 +121,7 @@ const UserOrderDetail = (props) => {
                                                 </Stack>
                                             </TableCell>
                                             <TableCell component="th" scope="row">
-                                                {item.productPrice?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
+                                                {formatNumber(item.productPrice)} <sup>Đ</sup>
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {item.quantity}

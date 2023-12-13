@@ -9,6 +9,10 @@ const loginApi = {
         const url = `/Accounts/Register`;
         return axiosFile.post(url, data);
     },
+    signInWithGoogle(data) {
+        const url = `/Accounts/SignInGoogle`;
+        return axiosFile.post(url, data);
+    },
 
 }
 export default loginApi;

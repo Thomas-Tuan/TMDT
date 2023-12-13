@@ -17,7 +17,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import loginApi from '../../../api/loginApi';
-import useAuth from '../../../hooks/useAuth';
 
 const AdminLogin = () => {
   const paperRootStyle = { width: 340, margin: "20px auto" }
@@ -26,11 +25,10 @@ const AdminLogin = () => {
   const btnstyle = { margin: '8px 0' }
 
   const [showPassword, setShowPassword] = useState(false);
-  const { setAuth } = useAuth();
-
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/admin/dashboard';
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -50,19 +48,20 @@ const AdminLogin = () => {
   const handleSubmit = async (values, props) => {
     try {
       const response = await loginApi.signIn(values)
-      setAuth(response);
       if (response.roles.every((role) => role.toLowerCase().includes("admin"))) {
+        if (!response.isLock) {
+          toast.success("Đăng nhập thành công", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
         sessionStorage.setItem('adminAccount', JSON.stringify(response));
-        toast.success("Đăng nhập thành công", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
       }
       navigate(from, { replace: true });
     }

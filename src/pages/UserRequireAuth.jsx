@@ -6,6 +6,7 @@ const UserRequireAuth = () => {
     const location = useLocation();
     const getUserSession = sessionStorage.getItem('userAccount');
     const accountInfo = JSON.parse(getUserSession);
+
     if (accountInfo) {
         return <Outlet />;
     }

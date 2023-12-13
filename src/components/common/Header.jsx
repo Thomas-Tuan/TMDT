@@ -12,15 +12,18 @@ const Header = () => {
                 disableGutters
                 maxWidth="xl"
                 sx={{
-                    background: "#000",
+                    height: 100,
                 }}
             >
-                <Stack>
+                <Stack sx={{
+                    width: 1,
+                    background: "#000",
+                    position: { md: 'fixed', xs: 'static' },
+                    zIndex: { md: 5, xs: 'auto' },
+                }}>
                     <UIProvider>
-                        (
                         <Appbar />
                         <AppDrawer />
-                        )
                     </UIProvider>
                 </Stack>
             </Container>

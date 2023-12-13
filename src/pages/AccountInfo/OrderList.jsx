@@ -57,6 +57,10 @@ export default function OrdersList() {
         setIsModalOpen(false);
     };
 
+    const formatNumber = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+
     useEffect(() => {
         setIsLoading(true);
         const fetchOrderList = async () => {
@@ -149,7 +153,7 @@ export default function OrdersList() {
                                         {format(parseISO(item.date), "dd/MM/yyyy HH:mm:ss")}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {item.total?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
+                                        {formatNumber(item.total)}<sup>Đ</sup>
                                     </TableCell>
                                     <TableCell component="th" scope="row">
                                         {itemGet.getStatusText(item.status)}
@@ -178,7 +182,7 @@ export default function OrdersList() {
                                             size="large"
                                             edge="start"
                                             color="inherit"
-                                            disabled={item.status === -1}
+                                            disabled={item.status === -1 || item.status === 1 || item.status === 2}
                                             onClick={() => {
                                                 openModal();
                                             }}

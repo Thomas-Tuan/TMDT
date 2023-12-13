@@ -78,6 +78,10 @@ const EditOrder = (props) => {
         setIsModalOpen(false);
     };
 
+    const formatNumber = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
@@ -253,7 +257,7 @@ const EditOrder = (props) => {
                                                 </Stack>
                                             </TableCell>
                                             <TableCell component="th" scope="row">
-                                                {item.productPrice?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
+                                                {formatNumber(item.productPrice)}<sup>Đ</sup>
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {item.quantity}
@@ -335,6 +339,7 @@ const EditOrder = (props) => {
                     <Grid item xs={12}>
                         <Stack direction="row" justifyContent="center" alignItems="center">
                             <Box sx={{
+                                mr: 2,
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: 'center',
@@ -342,18 +347,19 @@ const EditOrder = (props) => {
                                 <Typography mr={5} variant='body1'>
                                     Trạng thái đơn hàng
                                 </Typography>
-                                <IconButton
-                                    size="large"
-                                    edge="start"
-                                    color="inherit"
-                                    onClick={openModal}
-                                >
-                                    <EditIcon />
-                                </IconButton>
+                                <Typography variant='body1' fontWeight="bold">
+                                    {itemGet.getStatusText(params.status)}
+                                </Typography>
                             </Box>
-                            <Typography variant='body1' fontWeight="bold">
-                                {itemGet.getStatusText(params.status)}
-                            </Typography>
+                            <IconButton
+                                size="large"
+                                edge="start"
+                                disabled={params.status === -1 || params.status === 1 || params.status === 2}
+                                color="inherit"
+                                onClick={openModal}
+                            >
+                                <EditIcon />
+                            </IconButton>
                         </Stack>
                     </Grid>
                 </Grid>

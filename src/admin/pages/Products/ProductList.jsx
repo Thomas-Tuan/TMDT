@@ -33,7 +33,7 @@ const headCells = [
     },
     {
         Id: "price",
-        Title: "Giá tiền",
+        Title: "Giá tiền gốc",
     },
     {
         Id: "quantity",
@@ -52,18 +52,21 @@ export default function ProductsList() {
 
     useEffect(() => {
         setIsLoading(true);
+        const fetchProductList = async () => {
+            try {
+                const response = await productApi.getAll();
+                setIsLoading(false);
+                setProducts(response);
+            } catch (error) {
+                console.log("Error to fetch API: ", error.message);
+            }
+        }
         fetchProductList();
     }, [])
 
-    const fetchProductList = async () => {
-        try {
-            const response = await productApi.getAll();
-            setIsLoading(false);
-            setProducts(response);
-        } catch (error) {
-            console.log("Error to fetch API: ", error.message);
-        }
-    }
+    const formatNumber = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
 
     return (
         <Paper sx={{
@@ -150,7 +153,7 @@ export default function ProductsList() {
                                             {item.name}
                                         </TableCell>
                                         <TableCell component="th" scope="row">
-                                            {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}<sup>Đ</sup>
+                                            {formatNumber(item.price)}<sup>Đ</sup>
                                         </TableCell>
                                         <TableCell component="th" scope="row">
                                             {item.quantity}

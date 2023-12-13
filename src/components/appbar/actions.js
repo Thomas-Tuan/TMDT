@@ -19,6 +19,23 @@ export default function Actions({ matches }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
+  const handleToFavouriteList = () => {
+    if (!accountInfo) {
+      toast.warning("Vui lòng đăng nhập trước ", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+    navigate('/customer/favourite');
+  };
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -143,6 +160,7 @@ export default function Actions({ matches }) {
           }}
         >
           <ListItemIcon
+            onClick={() => handleToFavouriteList()}
             sx={{
               justifyContent: "center",
               color: Colors.white,

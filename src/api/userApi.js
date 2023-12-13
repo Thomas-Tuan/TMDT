@@ -1,6 +1,10 @@
 import axiosFile from "./axiosFile";
 
 const userApi = {
+    getAllUserCount(params) {
+        const url = '/Users/GetAllUserCount';
+        return axiosFile.get(url, { params });
+    },
     getAllUser(params) {
         const url = '/Users/GetAllUsers';
         return axiosFile.get(url, { params });

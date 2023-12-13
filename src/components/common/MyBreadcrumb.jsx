@@ -9,10 +9,11 @@ import {
     useLocation
 } from 'react-router-dom';
 import productApi from '../../api/productApi';
+import { Container } from '@mui/material';
 
 
 function LinkRouter(props) {
-    return <Typography variant='h6' {...props} component={Link} />;
+    return <Typography variant='body1' {...props} component={Link} />;
 }
 
 function Page() {
@@ -28,6 +29,7 @@ function Page() {
         '/about': 'Giới thiệu',
         '/cart': 'Giỏ hàng',
         '/product': 'Danh sách sản phẩm',
+        '/searchOrder': 'Tra cứu',
         [dynamicBreadcrumbKey]: productDetail.name,
     };
 
@@ -54,7 +56,7 @@ function Page() {
                 const last = index === pathnames.length - 1;
                 const to = `/${pathnames.slice(0, index + 1).join('/')}`;
                 return last ? (
-                    <Typography variant='h6' color="text.primary" key={to}>
+                    <Typography fontWeight={500} variant='body1' color="text.primary" key={to}>
                         {breadcrumbNameMap[to] ? breadcrumbNameMap[to] : null}
                     </Typography>
                 ) :
@@ -70,10 +72,12 @@ function Page() {
 
 export default function MyBreadcrumb() {
     return (
-        <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column', alignItems: "center" }}>
-            <Routes>
-                <Route path="*" element={<Page />} />
-            </Routes>
-        </Box>
+        <Container maxWidth="lg" disableGutters>
+            <Box sx={{ mt: 1, display: 'flex', justifyContent: "flex-start", alignItems: "center" }}>
+                <Routes>
+                    <Route path="*" element={<Page />} />
+                </Routes>
+            </Box>
+        </Container>
     );
 }

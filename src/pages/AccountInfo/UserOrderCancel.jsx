@@ -13,9 +13,9 @@ import {
 } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
+import { toast } from 'react-toastify';
+import orderApi from '../../api/orderApi';
 import { Colors } from '../../styles/theme';
-import useOrders from '../../hooks/useOrder';
-
 
 const orderStatus = [
     {
@@ -30,7 +30,7 @@ const orderStatus = [
 
 const UserOrderCancel = (props) => {
     const { open, orderModel, onClose } = props
-    const { handleSubmit } = useOrders();
+
     const CustomizedSelectForFormik = ({ children, form, field }) => {
         const { name, value } = field;
         const { setFieldValue } = form;
@@ -48,6 +48,38 @@ const UserOrderCancel = (props) => {
                 </Select>
             );
         }
+    };
+
+    const handleSubmit = async (values) => {
+        try {
+            await orderApi.update(values);
+            toast.warning('Cập nhật thành công', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000)
+        }
+        catch {
+            toast.error('Lỗi kết nối không ổn định', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }
+
     };
 
     return (

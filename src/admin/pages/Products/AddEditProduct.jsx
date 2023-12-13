@@ -53,6 +53,7 @@ const initialValues = {
     Description: "",
     Price: 0,
     Quantity: 0,
+    Discount: 0,
 };
 
 const AddEditProduct = () => {
@@ -204,10 +205,14 @@ const AddEditProduct = () => {
     }
 
     const validationSchema = Yup.object().shape({
+        Discount: Yup.number().typeError('Giá phải là ký tự số').positive('Giá không được âm'),
         Price: Yup.number().typeError('Giá phải là ký tự số').positive('Giá không được âm')
             .required('Không được bỏ trống'),
         Quantity: Yup.number().typeError('Số lượng phải là ký tự số').max(100, "Số lượng không được quá 100 !")
             .required('Không được bỏ trống'),
+        Name: Yup.string().required('Không được bỏ trống'),
+        categoryId: Yup.number().positive('Không được bỏ trống'),
+        branchId: Yup.number().positive('Không được bỏ trống'),
     });
 
     return (
@@ -222,7 +227,7 @@ const AddEditProduct = () => {
                             <Grid container spacing={2}>
                                 <Grid item xs={12} md={6} sm={12}  >
                                     <Grid container spacing={1}>
-                                        <Grid item xs={12} md={12}>
+                                        <Grid item xs={12} md={6}>
                                             <Field
                                                 label="Tên sản phẩm"
                                                 fullWidth
@@ -232,6 +237,22 @@ const AddEditProduct = () => {
                                                 name="Name"
                                                 as={TextField}>
                                             </Field>
+                                            <Typography variant='body1' style={{ color: 'red' }}>
+                                                <ErrorMessage name="Name" component="span" />
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12} md={6}>
+                                            <Field
+                                                fullWidth
+                                                label="Số lượng tồn kho"
+                                                as={TextField}
+                                                value={values.Quantity}
+                                                onChange={handleChange} onBlur={handleBlur}
+                                                name="Quantity"
+                                            />
+                                            <Typography variant='body1' style={{ color: 'red' }}>
+                                                <ErrorMessage name="Quantity" component="span" />
+                                            </Typography>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
                                             <InputLabel >Thương hiệu</InputLabel>
@@ -248,6 +269,9 @@ const AddEditProduct = () => {
                                                     </MenuItem>
                                                 )) : null}
                                             </Field>
+                                            <Typography variant='body1' style={{ color: 'red' }}>
+                                                <ErrorMessage name="branchId" component="span" />
+                                            </Typography>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
                                             <InputLabel >Danh mục</InputLabel>
@@ -264,6 +288,9 @@ const AddEditProduct = () => {
                                                     </MenuItem>
                                                 )) : null}
                                             </Field>
+                                            <Typography variant='body1' style={{ color: 'red' }}>
+                                                <ErrorMessage name="categoryId" component="span" />
+                                            </Typography>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
                                             <Field
@@ -282,14 +309,15 @@ const AddEditProduct = () => {
                                         <Grid item xs={12} md={6}>
                                             <Field
                                                 fullWidth
-                                                label="Số lượng"
+                                                label="Số tiền giảm"
                                                 as={TextField}
-                                                value={values.Quantity}
-                                                onChange={handleChange} onBlur={handleBlur}
-                                                name="Quantity"
+                                                value={values.Discount}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                name="Discount"
                                             />
                                             <Typography variant='body1' style={{ color: 'red' }}>
-                                                <ErrorMessage name="Quantity" component="span" />
+                                                <ErrorMessage name="Discount" component="span" />
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={12} md={12}>

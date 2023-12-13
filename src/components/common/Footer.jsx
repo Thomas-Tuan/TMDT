@@ -71,6 +71,11 @@ export default function Footer() {
                                 Liên hệ
                             </Typography>
                         </ListItemText>
+                        <ListItemText>
+                            <Typography component={Link} to="/searchOrder" lineHeight={2} variant="body" fontWeight="bold" textTransform="uppercase">
+                                Tra cứu
+                            </Typography>
+                        </ListItemText>
                     </List>
                 </Grid>
                 <Grid item md={6} lg={2} sm={3} >

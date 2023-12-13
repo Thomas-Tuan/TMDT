@@ -16,7 +16,7 @@ const UserProductList = () => {
     const [page, setPage] = useState(0);
     const { productsPagination, isLoading, dataFetched } = usePaginationProducts(page);
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const totalPages = Math.ceil(productsPagination.totalCount / 10);
+    const totalPages = Math.ceil(productsPagination.totalCount / 8);
 
     const navigate = useNavigate();
     const [branches, setBranches] = useState([]);
@@ -134,6 +134,10 @@ const UserProductList = () => {
         setMaxPrice(maxPrice);
         setPage(1);
         navigate('/product');
+    };
+
+    const formatNumber = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     };
 
     return (
@@ -320,12 +324,30 @@ const UserProductList = () => {
                                                                 }}
                                                             />
                                                             <CardContent >
-                                                                <Typography textAlign="center" fontWeight="bold" variant="h5">
+                                                                <Typography textAlign="center" fontWeight="bold" variant="body1">
                                                                     {item.name}
                                                                 </Typography>
-                                                                <Typography textAlign="center" variant="body1">
-                                                                    {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}<sup>Đ</sup>
-                                                                </Typography>
+                                                                {
+                                                                    item.discount !== 0 ?
+                                                                        <Stack alignItems="center" justifyContent="center">
+                                                                            <Typography sx={{
+                                                                                color: Colors.danger,
+                                                                            }}
+                                                                                fontWeight={700}
+                                                                                variant="h6">
+                                                                                {formatNumber((item.price - item.discount))}<sup>Đ</sup>
+                                                                            </Typography>
+                                                                            <Typography mr={1} textAlign="center" variant="body1">
+                                                                                <del>
+                                                                                    {formatNumber(item.price)}<sup>Đ</sup>
+                                                                                </del>
+                                                                            </Typography>
+                                                                        </Stack>
+                                                                        :
+                                                                        <Typography textAlign="center" variant="body1">
+                                                                            {formatNumber(item.price)}<sup>Đ</sup>
+                                                                        </Typography>
+                                                                }
                                                             </CardContent>
                                                             <CardActions sx={{
                                                                 display: "flex",

@@ -1,10 +1,11 @@
 import { toast } from 'react-toastify';
 import orderApi from '../api/orderApi';
+import { useNavigate } from 'react-router-dom';
 
 const useOrders = () => {
+    const navigate = useNavigate();
     const handleDeleteOrder = async (id) => {
         try {
-
             await orderApi.remove(id);
             toast.info('Xóa thành công', {
                 position: "top-right",
@@ -47,9 +48,7 @@ const useOrders = () => {
                 progress: undefined,
                 theme: "colored",
             });
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000)
+            navigate('/admin/order');
         }
         catch {
             toast.error('Lỗi kết nối không ổn định', {

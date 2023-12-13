@@ -31,8 +31,11 @@ const SuccessPage = () => {
     const params = location.state === null ? null : location.state;
 
     const [getOrderDetail, setGetOrderDetail] = useState({})
+    const formatNumber = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
 
-    if (location.state === null) {
+    if (params === null) {
         order_id = searchParams.get('order_id');
         getVnPayInfo = searchParams.get('vnp_OrderInfo');
         const VnPayregex = /Don hang (\S+) co tong cong la:\d+/;
@@ -195,7 +198,7 @@ const SuccessPage = () => {
                                                         </Stack>
                                                     </TableCell>
                                                     <TableCell component="th" scope="row">
-                                                        {item.productPrice?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
+                                                        {formatNumber(item.productPrice)} <sup>Đ</sup>
                                                     </TableCell>
                                                     <TableCell component="th" scope="row">
                                                         {item.quantity}
@@ -260,7 +263,7 @@ const SuccessPage = () => {
                                                     </Stack>
                                                 </TableCell>
                                                 <TableCell component="th" scope="row">
-                                                    {item.productPrice?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
+                                                    {formatNumber(item.productPrice)} <sup>Đ</sup>
                                                 </TableCell>
                                                 <TableCell component="th" scope="row">
                                                     {item.quantity}

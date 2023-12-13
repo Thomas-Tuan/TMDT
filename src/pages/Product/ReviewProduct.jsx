@@ -32,7 +32,6 @@ const ReviewProduct = (props) => {
     const { handleSubmit } = useReviews();
     var currentDate = new Date();
 
-    console.log("dwodwa")
     const { reviewsPagination, isLoading, dataFetched } = usePaginationReviews(parseInt(productInfo.id), page)
     const getAllValues = () => {
         if (!isLoading && dataFetched) {

@@ -5,11 +5,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { addItem } from "../Redux/Cart/CartSlice";
+import productApi from "../api/productApi";
 import { ImagesBg } from "../asset";
 import Banner from '../components/banner';
 import Branch from "../components/common/Branch";
 import { SliderCarousel } from "../components/common/SliderCarousel";
-import usePaginationProducts from "../hooks/usePaginationProduct";
 import { Colors } from '../styles/theme';
 
 const HomePage = () => {
@@ -56,20 +56,32 @@ const HomePage = () => {
         },
     ]
 
-    const { productsPagination, isLoading, dataFetched } = usePaginationProducts(0);
     const [productList, setProductList] = useState([]);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if (!isLoading && dataFetched) {
-            setProductList(productsPagination.products);
+        setIsLoading(true);
+        const fetchProductList = async () => {
+            try {
+                const response = await productApi.getAll();
+                setIsLoading(false);
+                setProductList(response);
+            } catch (error) {
+                console.log("Error to fetch API: ", error.message);
+            }
         }
-    }, [isLoading, dataFetched, productsPagination]);
+        fetchProductList();
+    }, [])
 
     const handleNavigateToCart = (proDetail) => {
         dispatch(addItem(proDetail));
         navigate('/cart');
+    };
+
+    const formatNumber = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     };
 
     return (
@@ -106,7 +118,7 @@ const HomePage = () => {
                 {
                     productList.length !== 0 &&
                     <>
-                        {productList.slice(-4).reverse().map((item, idx) => (
+                        {productList.slice(0, 4).map((item, idx) => (
                             < Grid key={item.name} item xs={6} md={6} lg={3} >
                                 <Card component={Link} to={`product/${item.id}`}
                                     sx={{
@@ -128,12 +140,30 @@ const HomePage = () => {
                                         }}
                                     />
                                     <CardContent >
-                                        <Typography textAlign="center" fontWeight="bold" variant="h5">
+                                        <Typography textAlign="center" fontWeight="bold" variant="body1">
                                             {item.name}
                                         </Typography>
-                                        <Typography textAlign="center" variant="body1">
-                                            {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}<sup>Đ</sup>
-                                        </Typography>
+                                        {
+                                            item.discount !== 0 ?
+                                                <Stack direction="row" alignItems="center" justifyContent="center">
+                                                    <Typography mr={1} textAlign="center" variant="body1">
+                                                        <del>
+                                                            {formatNumber(item.price)}<sup>Đ</sup>
+                                                        </del>
+                                                    </Typography>
+                                                    <Typography sx={{
+                                                        color: Colors.danger,
+                                                    }}
+                                                        fontWeight={700}
+                                                        variant="h6">
+                                                        {formatNumber((item.price - item.discount))}<sup>Đ</sup>
+                                                    </Typography>
+                                                </Stack>
+                                                :
+                                                <Typography textAlign="center" variant="body1">
+                                                    {formatNumber(item.price)}<sup>Đ</sup>
+                                                </Typography>
+                                        }
                                     </CardContent>
                                     <CardActions sx={{
                                         display: "flex",

@@ -170,6 +170,7 @@ export default function UsersList() {
                                                 <EditIcon />
                                             </IconButton>
                                             <IconButton
+                                                disabled={item.role === "Admin" ? true : false}
                                                 size="large"
                                                 edge="start"
                                                 color="inherit"

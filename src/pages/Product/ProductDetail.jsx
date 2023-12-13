@@ -11,28 +11,95 @@ import productApi from '../../api/productApi';
 import MyBreadcrumb from '../../components/common/MyBreadcrumb';
 import branchApi from '../../api/branchApi';
 import ReviewProduct from './ReviewProduct';
+import favouriteProductApi from '../../api/favouriteProductApi';
+import { Colors } from '../../styles/theme';
 
 
 const UserProductDetail = () => {
     const { id } = useParams();
+    const procId = parseInt(id);
     const [branches, setBranches] = useState([]);
     const [productDetail, setProductDetail] = useState({})
-    const [matchBranch, setMatchBranch] = useState({})
 
+    const [matchBranch, setMatchBranch] = useState({})
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [mainImage, setMainImage] = useState('');
-    const [itemCount, setItemCount] = useState(1);
 
+    const [itemCount, setItemCount] = useState(1);
     const [dataFetched, setDataFetched] = useState(false);
+    const getSession = sessionStorage.getItem('userAccount')
+    const accountInfo = JSON.parse(getSession);
+
+    const [favouriteList, setFavouriteList] = useState([])
+    const isProductInFavourites = favouriteList.includes(procId);
+
+    const handleAddFavourite = async () => {
+        if (!accountInfo) {
+            toast.warning("Vui lòng đăng nhập trước ", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }
+        else {
+            try {
+                const requestData = { customerId: accountInfo.customerId, productId: procId };
+                const params = {
+                    customerId: accountInfo.customerId,
+                    productId: procId
+                };
+                if (isProductInFavourites) {
+                    await favouriteProductApi.remove(params);
+                    toast.warning('Đã xóa sản phẩm khỏi danh sách yêu thích !',
+                        {
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                        });
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    await favouriteProductApi.add(requestData);
+                    toast.success('Đã thêm sản phẩm vào danh sách yêu thích !',
+                        {
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                        });
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
+            } catch (error) {
+                console.error('Error while adding/removing from favourites:', error);
+            }
+        }
+    };
 
     const handleChange = (image) => {
         setMainImage(image);
     };
+
     const handleAddToCart = (product, quantity) => {
         dispatch(updateQuantity({ product, quantity }));
         navigate('/cart');
     };
+
     const handleIncrease = () => {
         if (itemCount < productDetail.quantity) {
             setItemCount(itemCount + 1);
@@ -41,6 +108,7 @@ const UserProductDetail = () => {
             alert('Số lượng vượt quá tồn kho !')
         }
     };
+
     const handleDecrease = () => {
         if (itemCount > 1) {
             setItemCount(itemCount - 1);
@@ -50,20 +118,30 @@ const UserProductDetail = () => {
         }
     }
 
+    const formatNumber = (number) => {
+        return number?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+
     useEffect(() => {
+        const fetchBranchList = async () => {
+            try {
+                const response = await branchApi.getAll();
+                setBranches(response);
+            } catch (error) {
+                console.log("Error to fetch API: ", error.message);
+            }
+        }
         fetchBranchList();
-        if (id !== undefined) {
+
+        if (procId !== undefined) {
             const getProductById = async (id) => {
                 try {
-                    const response = await productApi.get(id);
+                    const response = await productApi.get(procId);
                     setProductDetail(response);
                     setDataFetched(true);
-                    if (branches.length > 0 && productDetail.branchId !== undefined) {
-                        const matchingItem = branches.find(item => item.id === productDetail.branchId);
-                        setMatchBranch(matchingItem);
-                    }
+
                 } catch (error) {
-                    console.error('Lỗi không được lấy dữ liệu sản phẩm:', error);
+                    console.error('Lỗi không lấy được dữ liệu sản phẩm:', error);
                     toast.error('Không tìm thấy sản phẩm này !', {
                         position: "top-right",
                         autoClose: 3000,
@@ -77,18 +155,25 @@ const UserProductDetail = () => {
                     navigate('/product');
                 }
             }
-            getProductById(id);
+            getProductById(procId);
         }
-    }, []);
+        if (branches.length > 0 && productDetail.branchId !== undefined) {
+            const matchingItem = branches.find(item => item.id === productDetail.branchId);
+            setMatchBranch(matchingItem);
+        }
 
-    const fetchBranchList = async () => {
-        try {
-            const response = await branchApi.getAll();
-            setBranches(response);
-        } catch (error) {
-            console.log("Error to fetch API: ", error.message);
+        if (procId !== undefined && accountInfo) {
+            const getFavouriteProductById = async (cusId) => {
+                try {
+                    const oldFarvouriteResponse = await favouriteProductApi.getById(cusId);
+                    setFavouriteList(oldFarvouriteResponse)
+                } catch (error) {
+                    console.error('Lỗi không lấy được dữ liệu sản phẩm yêu thích:', error);
+                }
+            }
+            getFavouriteProductById(accountInfo.customerId);
         }
-    }
+    }, [id, matchBranch, accountInfo, navigate, procId, productDetail.branchId]);
 
     return (
         <>
@@ -160,55 +245,82 @@ const UserProductDetail = () => {
                         <Card >
                             <CardContent >
                                 <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                    <Stack alignItems="center">
-                                        <Box sx={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            width: 1,
-                                        }}>
-                                            <Typography variant="subtitle1">
-                                                Thương hiệu
-                                            </Typography>
-                                            <Typography variant="h5">
-                                                {matchBranch.name}
-                                            </Typography>
-                                        </Box>
-                                    </Stack>
-                                    <IconButton>
-                                        <FavoriteOutlined fontSize="large" />
+                                    <Typography variant="body1" fontWeight="light">
+                                        {matchBranch.name}
+                                    </Typography>
+                                    <IconButton onClick={() => handleAddFavourite()}>
+                                        {isProductInFavourites ? (
+                                            <FavoriteOutlined fontSize="large" color="error" />
+                                        ) : (
+                                            <FavoriteOutlined fontSize="large" />
+                                        )}
                                     </IconButton>
                                 </Stack>
-                                <Typography variant="h3">
+                                <Typography sx={{
+                                    width: "80%",
+                                }} variant="h4">
                                     {productDetail.name}
                                 </Typography>
                                 {productDetail.description && (
-                                    <Typography variant="subtitle1">
+                                    <Typography sx={{
+                                        ml: "-5px",
+                                    }} variant="subtitle1">
                                         {parse(productDetail.description)}
                                     </Typography>
                                 )}
-                                <Stack mt={1} direction="row" justifyContent="space-between" alignContent="center">
-                                    <Box sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        width: "50%",
-                                    }}>
-                                        <Typography variant="h5">
-                                            {productDetail.price?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
-                                        </Typography>
-                                    </Box>
+                                <Stack mb={1} direction="row" justifyContent="space-between" alignContent="center">
+                                    {
+                                        productDetail.discount !== 0 ?
+                                            <Stack sx={{
+                                                width: "60%",
+                                            }} alignproductDetails="center" justifyContent="center">
+                                                <Typography sx={{
+                                                    color: Colors.danger,
+                                                }}
+                                                    fontWeight={700}
+                                                    variant="h6">
+                                                    {formatNumber((productDetail.price - productDetail.discount))}<sup>Đ</sup>
+                                                </Typography>
+                                                <Typography mr={1} variant="h5">
+                                                    <del>
+                                                        {formatNumber(productDetail.price)}<sup>Đ</sup>
+                                                    </del>
+                                                </Typography>
+                                            </Stack>
+                                            :
+                                            <Box sx={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                width: "60%",
+                                            }}>
+                                                <Typography textAlign="center" variant="h5">
+                                                    {formatNumber(productDetail.price)}<sup>Đ</sup>
+                                                </Typography>
+                                            </Box>
+                                    }
                                     <Stack my={1} width="100%" direction="row" alignItems="center" justifyContent="flex-start">
-                                        <IconButton onClick={(e) => {
-                                            handleDecrease()
-                                        }}>
-                                            <RemoveCircleOutline />
-                                        </IconButton>
-                                        <Typography variant="body1">{itemCount}</Typography>
-                                        <IconButton onClick={(e) => {
-                                            handleIncrease()
-                                        }}>
-                                            <AddCircleOutlined />
-                                        </IconButton>
-                                        <Typography variant="subtitle1">còn {productDetail.quantity} sản phẩm</Typography>
+                                        {productDetail.quantity === 0 ?
+                                            <Typography sx={{
+                                                color: Colors.danger,
+                                                textTransform: "capitalize",
+                                            }}
+                                                variant="subtitle1">Đã hết hàng </Typography>
+                                            :
+                                            <>
+                                                <IconButton onClick={(e) => {
+                                                    handleDecrease()
+                                                }}>
+                                                    <RemoveCircleOutline />
+                                                </IconButton>
+                                                <Typography variant="body1">{itemCount}</Typography>
+                                                <IconButton onClick={(e) => {
+                                                    handleIncrease()
+                                                }}>
+                                                    <AddCircleOutlined />
+                                                </IconButton>
+                                                <Typography variant="subtitle1">còn {productDetail.quantity} sản phẩm</Typography>
+                                            </>
+                                        }
                                     </Stack>
                                 </Stack>
                                 <Button sx={{

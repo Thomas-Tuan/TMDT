@@ -35,16 +35,19 @@ const CheckoutPage = () => {
   const newAccountObject = JSON.parse(getSession);
   const navigate = useNavigate();
 
-  const handleClear = () => {
-    dispatch(clearCart());
-  }
-
   const handleApplyCode = async (values) => {
     try {
-      if (
-        values.Code.trim() === ""
-      ) {
-        alert("Mã khuyến mãi không được bỏ trống !!");
+      if (values.Code.trim() === "") {
+        toast.error('Mã khuyến mãi không được bỏ trống !!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
         return;
       }
       const response = await voucherApi.apply(values);
@@ -99,13 +102,25 @@ const CheckoutPage = () => {
     }
     try {
       const orderResult = await orderApi.create(newOrder);
-      handleClear();
+      dispatch(clearCart());
       const params = { Amount: values.Amount, orderId: orderResult.id }
       const response = await paymentApi.createPaymentWithPaypal(params);
       window.location.href = response;
     }
     catch (err) {
-      console.log(`Lỗi đặt hàng :${err}`)
+      if (err.response && err.response.data !== undefined) {
+        toast.error(err.response.data.errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        console.log(`Lỗi đặt hàng : ${err.response.data.errorMessage}`);
+      }
     }
   }
 
@@ -130,13 +145,25 @@ const CheckoutPage = () => {
     }
     try {
       const orderResult = await orderApi.create(newOrder);
-      handleClear();
+      dispatch(clearCart());
       const params = { Amount: values.Amount, orderId: orderResult.id }
       const response = await paymentApi.createPaymentWithVnPay(params);
       window.location.href = response;
     }
     catch (err) {
-      console.log(`Lỗi đặt hàng :${err}`)
+      if (err.response && err.response.data !== undefined) {
+        toast.error(err.response.data.errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        console.log(`Lỗi đặt hàng : ${err.response.data.errorMessage}`);
+      }
     }
   }
 
@@ -163,6 +190,7 @@ const CheckoutPage = () => {
     }
     try {
       const orderResult = await orderApi.create(newOrder);
+      dispatch(clearCart());
       toast.success('Đặt hàng thành công', {
         position: "top-right",
         autoClose: 3000,
@@ -173,15 +201,30 @@ const CheckoutPage = () => {
         progress: undefined,
         theme: "colored",
       });
-      handleClear();
-      const params = { orderId: orderResult.id };
 
+      const params = { orderId: orderResult.id };
       navigate('/success', { state: params });
     }
     catch (err) {
-      console.log(`Lỗi đặt hàng :${err}`)
+      if (err.response && err.response.data !== undefined) {
+        toast.error(err.response.data.errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        console.log(`Lỗi đặt hàng : ${err.response.data.errorMessage}`);
+      }
     }
   }
+
+  const formatNumber = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
 
   return (
     <Container maxWidth="lg" disableGutters>
@@ -262,17 +305,47 @@ const CheckoutPage = () => {
                             padding: "0.7rem 0"
                           }} variant="body1"> {item.cartQuantity}</Typography>
                         </TableCell>
-                        <TableCell component="th" scope="row">
-                          {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          {(item.price * item.cartQuantity).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
-                        </TableCell>
+                        {
+                          item.discount !== 0 ?
+                            <>
+                              <TableCell component="th" scope="row">
+                                {formatNumber((item.price - item.discount))}<sup>Đ</sup>
+                              </TableCell>
+                              <TableCell component="th" scope="row">
+                                {formatNumber((item.price - item.discount) * item.cartQuantity)} <sup>Đ</sup>
+                              </TableCell>
+                            </>
+                            :
+                            <>
+                              <TableCell component="th" scope="row">
+                                {formatNumber(item.price)} <sup>Đ</sup>
+                              </TableCell>
+                              <TableCell component="th" scope="row">
+                                {formatNumber((item.price * item.cartQuantity))} <sup>Đ</sup>
+                              </TableCell>
+                            </>
+                        }
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
+              <Button onClick={() => navigate('/cart')}
+                sx={{
+                  maxWidth: 1,
+                  mt: 2,
+                  height: 40,
+                  borderRadius: 3,
+                  letterSpacing: "1.15px",
+                  border: `0.5px solid ${Colors.shaft}`,
+                  color: `${Colors.dark_gray}`,
+                  background: "none",
+                  outline: "none",
+                  cursor: "pointer",
+                }}>
+                Quay lại giỏ hàng
+                <ChevronRight />
+              </Button>
               <Stack my={2} alignItems="end" >
                 <Stack alignItems="center" direction="row" justifyContent="space-between">
                   <Typography variant='body1' fontWeight={400}>
@@ -280,11 +353,11 @@ const CheckoutPage = () => {
                   </Typography>
                   {newTotalAmount !== 0 ?
                     <Typography variant='body1' fontWeight="bolder">
-                      {newTotalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
+                      {formatNumber(newTotalAmount)} <sup>Đ</sup>
                     </Typography>
                     :
                     <Typography variant='body1' fontWeight="bolder">
-                      {cartList.cartTotalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
+                      {formatNumber(cartList.cartTotalAmount)} <sup>Đ</sup>
                     </Typography>
                   }
                 </Stack>
@@ -391,6 +464,7 @@ const CheckoutPage = () => {
                                 outline: "none",
                                 cursor: "pointer",
                               }}
+                                disabled={isUsed}
                                 onClick={() => handleApplyCode({ Code: couponCode, PriceAmount: cartList.cartTotalAmount })}
                               >
                                 Áp dụng

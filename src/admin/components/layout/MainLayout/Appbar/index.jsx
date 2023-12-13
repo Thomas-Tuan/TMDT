@@ -5,18 +5,17 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
 import { Menu, MenuItem, Stack, Typography } from '@mui/material';
+import MuiAppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
 import Toolbar from '@mui/material/Toolbar';
 import { alpha, styled } from '@mui/material/styles';
 import React, { useState } from 'react';
-import { Colors } from '../../../../../styles/theme';
-import useAuth from '../../../../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Colors } from '../../../../../styles/theme';
 
 const drawerWidth = 240;
 
@@ -86,7 +85,6 @@ const MyAppBar = (props) => {
     const getSession = sessionStorage.getItem('adminAccount')
     const accountInfo = JSON.parse(getSession);
     const { handleDrawerOpen, open } = props;
-    const { auth, setAuth } = useAuth();
 
     const navigate = useNavigate();
     const handleProfileMenuOpen = (event) => {
@@ -105,7 +103,6 @@ const MyAppBar = (props) => {
     const handleSignOut = () => {
         setAnchorEl(null);
         handleMobileMenuClose();
-        setAuth({})
         sessionStorage.removeItem('adminAccount');
         toast.success("Đăng xuất thành công", {
             position: "top-right",
@@ -248,7 +245,7 @@ const MyAppBar = (props) => {
                                 <AccountCircle />
                             </IconButton>
                             <Typography>
-                                {auth.name ? auth.name : accountInfo.name}
+                                {accountInfo.name}
                             </Typography>
                         </Stack>
                     </Box>

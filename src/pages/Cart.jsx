@@ -21,6 +21,10 @@ const Cart = () => {
         dispatch(clearCart());
     }
 
+    const formatNumber = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+
     const handleIncrease = (product) => {
         dispatch(addItem(product));
     };
@@ -39,7 +43,7 @@ const Cart = () => {
 
     return (
         <Container maxWidth="lg" disableGutters>
-            <Typography my={2} textTransform="uppercase" textAlign="center" variant="h3" >
+            <Typography pt={4} textTransform="uppercase" textAlign="center" fontWeight={500} variant="h5" >
                 Giỏ hàng của bạn
             </Typography>
             {
@@ -164,12 +168,26 @@ const Cart = () => {
                                                         </Button>
                                                     </Box>
                                                 </TableCell>
-                                                <TableCell component="th" scope="row">
-                                                    {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
-                                                </TableCell>
-                                                <TableCell component="th" scope="row">
-                                                    {(item.price * item.cartQuantity).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
-                                                </TableCell>
+                                                {
+                                                    item.discount !== 0 ?
+                                                        <>
+                                                            <TableCell component="th" scope="row">
+                                                                {formatNumber((item.price - item.discount))}<sup>Đ</sup>
+                                                            </TableCell>
+                                                            <TableCell component="th" scope="row">
+                                                                {formatNumber((item.price - item.discount) * item.cartQuantity)} <sup>Đ</sup>
+                                                            </TableCell>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <TableCell component="th" scope="row">
+                                                                {formatNumber(item.price)} <sup>Đ</sup>
+                                                            </TableCell>
+                                                            <TableCell component="th" scope="row">
+                                                                {formatNumber((item.price * item.cartQuantity))} <sup>Đ</sup>
+                                                            </TableCell>
+                                                        </>
+                                                }
                                                 <TableCell component="th" scope="row">
                                                     <IconButton onClick={() => {
                                                         handleRemove(item)
@@ -188,7 +206,7 @@ const Cart = () => {
                                         Tổng cộng:
                                     </Typography>
                                     <Typography variant='body1' fontWeight="bolder">
-                                        {cartList.cartTotalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} <sup>Đ</sup>
+                                        {formatNumber(cartList.cartTotalAmount)} <sup>Đ</sup>
                                     </Typography>
                                 </Stack>
                                 <Stack alignItems="center" direction="row" justifyContent="space-between">

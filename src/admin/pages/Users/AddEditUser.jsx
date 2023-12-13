@@ -20,8 +20,6 @@ import * as Yup from 'yup';
 import userApi from '../../../api/userApi';
 import useUsers from '../../../hooks/useUsers';
 
-
-
 const AddEditUser = () => {
     const { id } = useParams();
     const { handleSubmit } = useUsers();
