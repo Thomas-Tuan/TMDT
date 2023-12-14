@@ -4,7 +4,6 @@ import contactApi from '../api/contactApi';
 const useContacts = () => {
     const handleDeleteContact = async (id) => {
         try {
-
             await contactApi.remove(id);
             toast.info('Xóa thành công', {
                 position: "top-right",

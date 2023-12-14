@@ -191,17 +191,6 @@ const CheckoutPage = () => {
     try {
       const orderResult = await orderApi.create(newOrder);
       dispatch(clearCart());
-      toast.success('Đặt hàng thành công', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-
       const params = { orderId: orderResult.id };
       navigate('/success', { state: params });
     }
